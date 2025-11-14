@@ -1,0 +1,17 @@
+https://www.asvspoof.org
+
+
+bibliotecas rust{
+
+    Ler o arquivo de áudio: hound ou rust-audio para carregar o áudio (WAV);
+
+    Transformada de Fourier(FFT): rustfft ou spectrum para calcular a FFT do áudio e gerar um espectro de frequências;
+
+    Gerar a Imagem: plotters ou image para salvar esses dados em uma imagem
+
+}
+
+
+Constant Q Cepstral Coefficients (Coeficientes Cepstrais de Q Constante)
+mel spectrogram
+
