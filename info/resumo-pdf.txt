@@ -1,0 +1,58 @@
+1----
+
+O Desafio ASVspoof 2019 representa um avanço significativo em relação às suas edições anteriores (2013, 2015 e 2017)
+na luta contra ataques de falsificação (spoofing) em sistemas de Verificação Automática de Locutor (ASV).
+
+Enquanto as edições passadas focavam em áreas específicas
+o desafio 2015 abordou primeiramente ataques de Síntese de Fala (SS)
+e Conversão de Voz (VC), e o 2017 concentrou-se nos ataques de Replay (reprodução) com uma metodologia menos controlada
+a edição 2019 amplia o escopo.
+
+A principal diferença do ASVspoof 2019 é que ele é o primeiro a focar simultaneamente em todos
+os três principais vetores de ataque (SS, VC e Replay). Além disso, ele utiliza os sistemas de SS e VC mais modernos,
+refletindo quatro anos de progresso tecnológico que tornam as vozes falsificadas quase indistinguíveis da fala genuína,
+testando a resiliência das contramedidas contra uma ameaça mais robusta. Para o ataque de Replay, a edição de 2019 adota
+uma configuração de avaliação controlada, permitindo uma análise mais precisa dos resultados e gerando insights mais
+confiáveis sobre o problema.
+
+2-----
+
+O principal destaque do plano de avaliação do ASVspoof 2019 é a adoção
+de uma nova métrica de avaliação primária: a função de custo de decisão em tandem (t-DCF).
+Esta mudança alinha o desafio mais estreitamente com a Verificação Automática de Locutor (ASV)
+ao garantir que os resultados das contramedidas reflitam seu impacto real na confiabilidade dos sistemas ASV
+
+
+
+Função de Custo de Decisão em Tandem (t-DCF)
+
+1 - Entendendo o "Tandem"
+Verificação Automática de Locutor (ASV): É o sistema principal.
+Ele decide se uma pessoa é quem diz ser com base em sua voz (autenticação).
+
+Contramedida: É um subsistema que atua como um "guarda-costas" para o ASV,
+verificando se a voz é genuína ou se é um ataque de falsificação (spoofing) (síntese de voz, gravação, etc.).
+
+Nas edições anteriores (2015 e 2017), os pesquisadores avaliavam se a contramedida era boa em
+detectar falsificações isoladamente (usando a métrica EER). O novo desafio, porém, exige uma avaliação em
+"tandem" (combinada).
+
+
+
+2 - O Problema da Confiabilidade
+O grande problema é a Confiabilidade do Sistema ASV:
+
+Uma contramedida pode ter pontuações de detecção ótimas isoladamente.
+
+No entanto, se ela for mal integrada ao ASV, pode causar problemas no mundo real, como:
+bloquear uma voz genuína por engano (diminuindo a experiência do usuário) ou liberar uma
+falsificação que o ASV não consegue identificar
+
+3- O Propósito da t-DCF
+A t-DCF (Função de Custo de Decisão em Tandem) resolve esse problema ao:
+
+Integrar a Avaliação: A métrica t-DCF avalia o desempenho da contramedida combinando suas pontuações
+com as pontuações de um sistema ASV fixo fornecido pelos organizadores.
+
+Medir o Impacto Real: Em vez de apenas medir a detecção, a t-DCF mede o custo final dos erros quando a contramedida
+está realmente em operação no ASV

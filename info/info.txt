@@ -15,3 +15,7 @@ bibliotecas rust{
 Constant Q Cepstral Coefficients (Coeficientes Cepstrais de Q Constante)
 mel spectrogram
 
+
+
+
+
