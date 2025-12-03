@@ -16,6 +16,10 @@ Constant Q Cepstral Coefficients (Coeficientes Cepstrais de Q Constante)
 mel spectrogram
 
 
+Treinamento: ASVspoof2019_LA_train ou ASVspoof2019_PA_train.
 
+Validação: ASVspoof2019_LA_dev ou ASVspoof2019_PA_dev.
+
+Avaliação: ASVspoof2019_LA_eval ou ASVspoof2019_PA_eval.
 
 

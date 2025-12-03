@@ -56,3 +56,6 @@ com as pontuações de um sistema ASV fixo fornecido pelos organizadores.
 
 Medir o Impacto Real: Em vez de apenas medir a detecção, a t-DCF mede o custo final dos erros quando a contramedida
 está realmente em operação no ASV
+
+
+3-----
