@@ -23,6 +23,9 @@ def gerar_espectrograma_stft(y, sr, caminho_saida):
     
     # Calcular STFT
     D = librosa.stft(y)
+    # np.abs(D) pega a magnitude do STFT (descarta a fase)
+    # Convertendo para escala decibel
+    # ref=np.max normaliza usando o maior valor
     S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
     
     # Plotar
@@ -81,6 +84,7 @@ def gerar_cochleagrama(y, sr, caminho_saida):
     
     # Aproximação usando CQT (Constant-Q Transform) que simula melhor a audição humana
     C = np.abs(librosa.cqt(y, sr=sr))
+
     C_db = librosa.amplitude_to_db(C, ref=np.max)
     
     # Plotar

@@ -59,3 +59,178 @@ está realmente em operação no ASV
 
 
 3-----
+
+ 1. Espectrograma STFT (Short-Time Fourier Transform)
+ “O espectrograma clássico: frequência × tempo”
+ O que é:
+
+A STFT divide o áudio em pequenos trechos (janelas) e aplica a Transformada de Fourier em cada trecho.
+
+ O que mostra:
+
+Tempo no eixo X
+
+Frequência (Hz) no eixo Y
+
+Intensidade representada por cores (em dB)
+
+ Para que serve:
+
+Analisar harmônicos
+
+Ver formatos de voz (formantes)
+
+Identificar ruídos no tempo
+
+ Vantagens:
+
+Simples e muito usado
+
+Boa visão geral do áudio
+
+ Desvantagens:
+
+Resolução fixa: não é ideal para todas as frequências
+
+ 2. Mel-Espectrograma
+ “O espectrograma baseado na percepção humana”
+ O que é:
+
+Transforma a escala de frequência para a Escala Mel, que imita como nosso ouvido percebe sons.
+
+ O que mostra:
+
+Frequências comprimidas em regiões agudas
+
+Melhor resolução onde o ouvido percebe melhor
+
+ Para que serve:
+
+Reconhecimento de fala
+
+Sistemas de IA (ASR)
+
+Classificação de áudio e música
+
+ Vantagens:
+
+Mais “humano”
+
+Reduz ruídos de alta frequência irrelevantes
+
+ 3. Log-Mel Espectrograma
+ “O mais usado em modelos de Deep Learning”
+ Diferença para o Mel normal:
+
+Aplica escala logarítmica na energia → isso deixa contraste melhor.
+
+ Por que é tão usado:
+
+Sons naturais possuem energia distribuída de forma logarítmica
+
+Fica parecido com imagens → ótimo para CNNs
+
+ Áreas comuns:
+
+Modelos tipo Whisper
+
+Classificação ambiental
+
+Speaker recognition
+
+ 4. Cochleagrama (via CQT — Constant-Q Transform)
+ “Modelo inspirado na cóclea do ouvido humano”
+ O que é:
+
+A CQT usa janelas diferentes para graves e agudos:
+
+Gravíssimos → janelas longas (boa resolução em frequência)
+
+Agudos → janelas curtas (boa resolução no tempo)
+
+Isso imita exatamente como funciona a cóclea humana.
+
+ O que mostra:
+
+Frequências distribuídas musicalmente (como notas)
+
+Muito bom para identificar tons e harmônicos musicais
+
+ Usos:
+
+Music Information Retrieval
+
+Análise de instrumentos
+
+Detecção de notas
+
+ 5. Log-STFT Spectrogram
+ “STFT normal, mas eixo Y em escala logarítmica”
+ Por que usar:
+
+O eixo logarítmico organiza frequências como o ouvido percebe:
+
+Mais detalhe nos graves
+
+Menos detalhe nos agudos
+
+ Serve para:
+
+Visualizar diálogos humanos
+
+Ver formantes com mais claridade
+
+Análise de voz e canto
+
+ 6. Chroma Espectrogram (Chroma STFT)
+ “Mapa de notas musicais (C, C#, D…)”
+ O que é:
+
+Agrupa todas as frequências que pertencem à mesma nota musical.
+Exemplo: todas as notas “A (Lá)” em qualquer oitava viram 1 única barra.
+
+ O que aparece:
+
+Eixo Y → 12 classes (C, C#, D, … B)
+
+Eixo X → tempo
+
+ Para que serve:
+
+Reconhecimento de acordes
+
+Harmonia
+
+Transcrição musical
+
+Análise tonal
+
+ Quando NÃO usar:
+
+Voz humana sem música
+
+Áudio com ruído
+
+ 7. Gabor Espectrograma
+
+(implementado aqui como STFT com janela Hann)
+
+ O que é:
+
+Um espectrograma gerado usando uma janela Gaussiana (ou similar), que é o núcleo das Transformadas de Gabor.
+
+ Por que usar:
+
+Melhor equilíbrio entre resolução de tempo e frequência
+
+Reduz artefatos da STFT tradicional
+
+Deixa o espectrograma mais "limpo"
+
+ Usos:
+
+Detecção de eventos curtos
+
+Pesquisa científica
+
+Processamento mais refinado
