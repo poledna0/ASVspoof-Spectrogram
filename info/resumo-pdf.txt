@@ -234,3 +234,35 @@ Detecção de eventos curtos
 Pesquisa científica
 
 Processamento mais refinado
+
+
+
+Tipo	Foco	Base Teórica	Aplicações
+STFT	Frequência × tempo	Fourier	Voz, música, ruídos
+Mel	Percepção humana	Escala Mel	IA, ASR, Speech
+Log-Mel	Intensidade log	Mel + log	Deep Learning
+Cochleagrama	Semelhante ao ouvido	CQT	Música, harmônicos
+Log-STFT	Frequência log	STFT + log	Voz humana
+Chroma	Notas musicais	STFT mapeado	Harmonia, acordes
+Gabor	Espectro refinado	Janela Gaussiana	Pesquisa e análise fina
+
+
+
+4-------
+
+O cenário de Acesso Lógico do ASVspoof 2019 foca em ataques de falsificação de voz gerados por software avançado, especificamente tecnologias de Síntese de Fala (TTS) e Conversão de Voz (VC).
+
+1. Ameaça e Tecnologia:
+
+Graças ao progresso da IA (como o WaveNet), a fala sintética e convertida é agora perceptualmente indistinguível da voz humana genuína, representando uma ameaça séria à segurança da Verificação Automática de Locutor (ASV).
+
+O desafio exige urgentemente a avaliação de contramedidas capazes de detectar essas fraudes sofisticadas.
+
+
+Teste no "Mundo Real" (In the Wild):
+
+O dataset de Avaliação é a fase de teste final, contendo áudios e locutores completamente novos e não vistos.
+
+Os algoritmos de falsificação usados para criar os dados de avaliação são intencionalmente diferentes (variantes) dos usados no treinamento.
+
+O objetivo é medir o desempenho das contramedidas em detectar fraudes com as quais elas nunca se depararam antes, simulando o desempenho "no mundo real".
