@@ -72,20 +72,6 @@ def gerar_log_mel_espectrograma(y, sr, caminho_saida):
     print(f"Log-Mel espectrograma salvo em: {caminho_saida}")
 
 
-def gerar_cochleagrama(y, sr, caminho_saida):
-    plt.figure(figsize=(12, 8))
-    
-    C = np.abs(librosa.cqt(y, sr=sr))
-
-    C_db = librosa.amplitude_to_db(C, ref=np.max)
-    
-    plt.axis('off')
-    librosa.display.specshow(C_db, sr=sr)
-    plt.savefig(caminho_saida, dpi=300, bbox_inches='tight', pad_inches=0)
-    plt.close()
-    print(f"Cochleagrama salvo em: {caminho_saida}")
-
-
 def gerar_log_stft_espectrograma(y, sr, caminho_saida):
     plt.figure(figsize=(12, 8))
     
@@ -99,29 +85,6 @@ def gerar_log_stft_espectrograma(y, sr, caminho_saida):
     print(f"Log-STFT salvo em: {caminho_saida}")
 
 
-def gerar_chroma_espectrograma(y, sr, caminho_saida):
-    plt.figure(figsize=(12, 8))
-    
-    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-    
-    plt.axis('off')
-    librosa.display.specshow(chroma, sr=sr)
-    plt.savefig(caminho_saida, dpi=300, bbox_inches='tight', pad_inches=0)
-    plt.close()
-    print(f"Chroma espectrograma salvo em: {caminho_saida}")
-
-
-def gerar_gabor_espectrograma(y, sr, caminho_saida):
-    plt.figure(figsize=(12, 8))
-    
-    D = librosa.stft(y, window='hann', n_fft=2048, hop_length=512)
-    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
-    
-    plt.axis('off')
-    librosa.display.specshow(S_db, sr=sr)
-    plt.savefig(caminho_saida, dpi=300, bbox_inches='tight', pad_inches=0)
-    plt.close()
-    print(f"Gabor espectrograma salvo em: {caminho_saida}")
 
 
 def gerar_todos_espectrogramas(caminho_audio, diretorio_saida="espectrogramas_saida"):
@@ -138,10 +101,10 @@ def gerar_todos_espectrogramas(caminho_audio, diretorio_saida="espectrogramas_sa
     gerar_espectrograma_stft(y, sr, f"{diretorio_saida}/{nome_base}_01_STFT.png")
     gerar_mel_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_02_Mel.png")
     gerar_log_mel_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_03_LogMel.png")
-    gerar_cochleagrama(y, sr, f"{diretorio_saida}/{nome_base}_04_Cochleagrama.png")
+    #gerar_cochleagrama(y, sr, f"{diretorio_saida}/{nome_base}_04_Cochleagrama.png")
     gerar_log_stft_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_05_LogSTFT.png")
-    gerar_chroma_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_06_Chroma.png")
-    gerar_gabor_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_07_Gabor.png")
+    #gerar_chroma_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_06_Chroma.png")
+    #gerar_gabor_espectrograma(y, sr, f"{diretorio_saida}/{nome_base}_07_Gabor.png")
 
     print(f"Imagens salvas em: {diretorio_saida}/")
 
