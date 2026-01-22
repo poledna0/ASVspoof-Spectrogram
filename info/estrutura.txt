@@ -1,0 +1,29 @@
+LA (Logical Access)
+
+    Ataques digitais
+    Artefatos de:
+    TTS
+    Voice Conversion
+    síntese neural
+    Padrões espectrais “limpos”, sem ruído de ambiente
+
+---------------------------------------------------------------
+
+PA (Physical Access)
+
+    Ataques acústicos
+    Replay via alto-falante + microfone
+    Forte influência de:
+    sala
+    microfone
+    distorção física
+    ruído
+
+
+---------------------
+
+treino - train
+validação - dev
+avaliação - eval 
+
+
