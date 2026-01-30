@@ -27,3 +27,15 @@ validação - dev
 avaliação - eval 
 
 
+
+<speaker_id> <utt_id> <env> <attack_id> <label>
+
+LA_0098 - speaker (irrelevante pro CM)
+
+LA_T_9582904 - ID do arquivo
+
+A06 - tipo de ataque (opcional pra você)
+
+spoof - LABEL
+
+bonafide - quando for áudio real
