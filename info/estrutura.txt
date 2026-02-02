@@ -80,8 +80,8 @@ Votação suave (soft voting)
 
 Áudio
  ├── Log-Mel - Modelo 1 - score1
- ├── CQT     - Modelo 2 - score2
- └── LFCC    - Modelo 3 - score3
+ ├── logstft - Modelo 2 - score2
+ └── mel     - Modelo 3 - score3
                    |
          Soft Voting (dev)
                    |

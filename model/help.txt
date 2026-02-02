@@ -1,0 +1,3 @@
+ log-mel - Modelo 1
+ logstft - Modelo 2
+ mel     - Modelo 3
