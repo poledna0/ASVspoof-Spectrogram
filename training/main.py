@@ -184,6 +184,13 @@ def main():
             )
             print(">> Modelo salvo (melhor EER até agora)")
 
+    # salva o modelo final (após todas as épocas) na pasta model
+    os.makedirs("model", exist_ok=True)
+    torch.save(
+        model.state_dict(),
+        "model/final-logmel-model1.pth"
+    )
+    print("Modelo final salvo")
 
 if __name__ == "__main__":
     main()
