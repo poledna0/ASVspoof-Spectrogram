@@ -27,6 +27,8 @@ validação - dev
 avaliação - eval 
 
 
+---------------------
+
 
 <speaker_id> <utt_id> <env> <attack_id> <label>
 
@@ -39,3 +41,48 @@ A06 - tipo de ataque (opcional pra você)
 spoof - LABEL
 
 bonafide - quando for áudio real
+
+
+---------------------
+
+
+
+No ASVspoof NÃO se faz split aleatório. O protocolo já define tudo:
+
+train - treinar os modelos
+
+dev - validação / seleção de modelo / tuning / pesos do ensemble
+
+eval - teste final (sem tocar antes)
+
+
+---------------------
+
+
+o meu obj é 
+
+M1	Log-Mel	Train - Dev
+M2	logstf	Train - Dev
+M3	mel	Train - Dev
+
+
+Cada um gera:
+
+Probabilidade de spoof
+
+EER individual no dev
+
+
+
+Votação suave (soft voting)
+
+
+
+Áudio
+ ├── Log-Mel - Modelo 1 - score1
+ ├── CQT     - Modelo 2 - score2
+ └── LFCC    - Modelo 3 - score3
+                   |
+         Soft Voting (dev)
+                   |
+               EER final
