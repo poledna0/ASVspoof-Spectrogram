@@ -29,7 +29,7 @@ MODEL_NAME = args.model_name
 #PROTOCOL_DEV = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
 
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 1
 LR = 1e-4
 
 

@@ -1,3 +1,0 @@
-Usando device: cuda
-Carregado 25380 amostras de /home/henrique/pibic/git/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
-Carregado 24844 amostras de /home/henrique/pibic/git/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt
