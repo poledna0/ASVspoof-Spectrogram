@@ -206,6 +206,7 @@ def main():
         f"model/{MODEL_NAME}_final.pth"
     )
     print("Modelo final salvo")
+    torch.cuda.empty_cache()
 
 if __name__ == "__main__":
     main()
