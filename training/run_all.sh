@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python train.py --img_dir /a/a/ --protocol_train /a/a/ --protocol_dev /a/a/ --model_name nome
+python3 /home/henrique/pibic/git/ASVspoof-Spectrogram-AntiSpoofing/training/main.py --img_dir_train /home/henrique/pibic/data-set-asv/logmel/LA/ASVspoof2019_LA_train/flac --img_dir_dev /home/henrique/pibic/data-set-asv/logmel/LA/ASVspoof2019_LA_dev/flac --protocol_train /home/henrique/pibic/git/ASVspoof-Spectrogram-AntiSpoofing/LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt --protocol_dev /home/henrique/pibic/git/ASVspoof-Spectrogram-AntiSpoofing/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt --model_name logmel

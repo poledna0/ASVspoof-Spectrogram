@@ -10,14 +10,15 @@ import torchvision.transforms as T
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--img_dir", required=True)
+parser.add_argument("--img_dir_train", required=True)
+parser.add_argument("--img_dir_dev", required=True)
 parser.add_argument("--protocol_train", required=True)
 parser.add_argument("--protocol_dev", required=True)
 parser.add_argument("--model_name", required=True)
 
 args = parser.parse_args()
-
-IMG_DIR = args.img_dir
+IMG_DIR_TRAIN = args.img_dir_train
+IMG_DIR_DEV = args.img_dir_dev
 PROTOCOL_TRAIN = args.protocol_train
 PROTOCOL_DEV = args.protocol_dev
 MODEL_NAME = args.model_name
@@ -28,8 +29,9 @@ MODEL_NAME = args.model_name
 #PROTOCOL_DEV = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
 
 BATCH_SIZE = 32
-EPOCHS = 20
+EPOCHS = 300
 LR = 1e-4
+
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print("Usando device:", DEVICE)
@@ -42,11 +44,15 @@ class ASVspoofCMDataset(Dataset):
         self.img_dir = img_dir
         self.samples = []
 
+        self.transform = T.Compose([
+            T.Resize((224, 224)),
+            T.ToTensor()
+        ])
+
         with open(protocol_file, "r") as f:
             for line in f:
                 parts = line.strip().split()
 
-                # padrão do protocolo ASVspoof
                 utt_id = parts[1]
                 label_str = parts[-1]
 
@@ -66,17 +72,12 @@ class ASVspoofCMDataset(Dataset):
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Imagem não encontrada: {img_path}")
 
-        # abre imagem em grayscale
         img = Image.open(img_path).convert("L")
-
-        # transforma em tensor (0–1) e mantém 1 canal
-        transform = T.ToTensor()
-        spec = transform(img)  # shape: (1, H, W)
+        spec = self.transform(img)
 
         label = torch.tensor(label, dtype=torch.long)
 
         return spec, label
-
 
 def get_model():
     """
@@ -147,8 +148,9 @@ def validate_eer(model, loader):
 def main():
 
     # datasets oficiais (nada de split aleatório)
-    train_ds = ASVspoofCMDataset(IMG_DIR, PROTOCOL_TRAIN)
-    dev_ds = ASVspoofCMDataset(IMG_DIR, PROTOCOL_DEV)
+    train_ds = ASVspoofCMDataset(IMG_DIR_TRAIN, PROTOCOL_TRAIN)
+    dev_ds   = ASVspoofCMDataset(IMG_DIR_DEV, PROTOCOL_DEV)
+
 
     train_loader = DataLoader(
         train_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=4
@@ -163,8 +165,12 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
-    best_eer = 100
     os.makedirs("checkpoints", exist_ok=True)
+
+    best_eer = 100
+    patience = 5
+    epochs_without_improvement = 0
+
 
     for epoch in range(EPOCHS):
         model.train()
@@ -193,11 +199,22 @@ def main():
         # salva sempre o melhor modelo
         if eer < best_eer:
             best_eer = eer
+            epochs_without_improvement = 0
+
             torch.save(
                 model.state_dict(),
                 f"checkpoints/{MODEL_NAME}_best.pth"
             )
+
             print(">> Modelo salvo (melhor EER até agora)")
+
+        else:
+            epochs_without_improvement += 1
+            print(f"Sem melhora por {epochs_without_improvement} epochs")
+
+            if epochs_without_improvement >= patience:
+                print("Early stopping ativado!")
+                break
 
     # salva o modelo final (após todas as épocas) na pasta model
     os.makedirs("model", exist_ok=True)
