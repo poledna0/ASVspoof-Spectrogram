@@ -7,10 +7,25 @@ from torchvision import models
 from sklearn.metrics import roc_curve
 from PIL import Image
 import torchvision.transforms as T
+import argparse
 
-IMG_DIR = "/home/pato/patin/data-espectograma/logmel/LA/ASVspoof2019_LA_train/flac/"
-PROTOCOL_TRAIN = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
-PROTOCOL_DEV = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
+parser = argparse.ArgumentParser()
+parser.add_argument("--img_dir", required=True)
+parser.add_argument("--protocol_train", required=True)
+parser.add_argument("--protocol_dev", required=True)
+parser.add_argument("--model_name", required=True)
+
+args = parser.parse_args()
+
+IMG_DIR = args.img_dir
+PROTOCOL_TRAIN = args.protocol_train
+PROTOCOL_DEV = args.protocol_dev
+MODEL_NAME = args.model_name
+
+
+#IMG_DIR = "/home/pato/patin/data-espectograma/logmel/LA/ASVspoof2019_LA_train/flac/"
+#PROTOCOL_TRAIN = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+#PROTOCOL_DEV = "/home/pato/patin/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
 
 BATCH_SIZE = 32
 EPOCHS = 20
@@ -180,7 +195,7 @@ def main():
             best_eer = eer
             torch.save(
                 model.state_dict(),
-                "checkpoints/efficientnet_b0_LA_best.pth"
+                f"checkpoints/{MODEL_NAME}_best.pth"
             )
             print(">> Modelo salvo (melhor EER até agora)")
 
@@ -188,7 +203,7 @@ def main():
     os.makedirs("model", exist_ok=True)
     torch.save(
         model.state_dict(),
-        "model/final-logmel-model1.pth"
+        f"model/{MODEL_NAME}_final.pth"
     )
     print("Modelo final salvo")
 
