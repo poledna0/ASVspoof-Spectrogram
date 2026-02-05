@@ -122,9 +122,6 @@ def compute_eer(y_true, y_score):
 
 
 def validate_eer(model, loader):
-    """
-    Roda a validação e retorna o EER.
-    """
 
     model.eval()
     scores = []
