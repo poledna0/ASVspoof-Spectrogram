@@ -1,3 +1,25 @@
 Usando device: cuda
 Carregado 25380 amostras de /home/henrique/pibic/git/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
 Carregado 24844 amostras de /home/henrique/pibic/git/ASVspoof-Spectrogram/LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt
+[Epoch 1/300] Train Loss: 0.0468 | Dev EER: 0.04%
+>> Modelo salvo (melhor EER até agora)
+[Epoch 2/300] Train Loss: 0.0027 | Dev EER: 0.01%
+>> Modelo salvo (melhor EER até agora)
+[Epoch 3/300] Train Loss: 0.0027 | Dev EER: 0.00%
+>> Modelo salvo (melhor EER até agora)
+[Epoch 4/300] Train Loss: 0.0009 | Dev EER: 0.01%
+Sem melhora por 1 epochs
+[Epoch 5/300] Train Loss: 0.0015 | Dev EER: 0.00%
+>> Modelo salvo (melhor EER até agora)
+[Epoch 6/300] Train Loss: 0.0001 | Dev EER: 0.00%
+Sem melhora por 1 epochs
+[Epoch 7/300] Train Loss: 0.0005 | Dev EER: 0.02%
+Sem melhora por 2 epochs
+[Epoch 8/300] Train Loss: 0.0024 | Dev EER: 0.19%
+Sem melhora por 3 epochs
+[Epoch 9/300] Train Loss: 0.0008 | Dev EER: 0.04%
+Sem melhora por 4 epochs
+[Epoch 10/300] Train Loss: 0.0001 | Dev EER: 0.03%
+Sem melhora por 5 epochs
+Early stopping ativado!
+Modelo final salvo
