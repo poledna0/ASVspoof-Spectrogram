@@ -1,3 +1,0 @@
-pip install --upgrade pip setuptools wheel
-pip install torch torchvision torchaudio
-pip install numpy pillow scikit-learn
