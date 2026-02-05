@@ -7,8 +7,8 @@ from datetime import datetime
 import subprocess
 import matplotlib.pyplot as plt
 
-DATASET_ROOT = Path("/home/heniruqe/b/dataset/original/PA").resolve()
-OUT_ROOT = Path("/home/heniruqe/b/dataset").resolve()
+DATASET_ROOT = Path("/home/henrique/pibic/data-set-asv/PA").resolve()
+OUT_ROOT = Path("/home/henrique/pibic/data-set-asv").resolve()
 
 AUDIO_EXT = ".flac"
 SR = 16000
@@ -25,35 +25,25 @@ for t in TIPOS:
 
 def load_audio(path):
 
-    try:
-        y, sr = sf.read(path)
+    cmd = [
+        "ffmpeg",
+        "-loglevel", "quiet",
+        "-i", str(path),
+        "-f", "f32le",
+        "-ac", "1",
+        "-ar", str(SR),
+        "-"
+    ]
 
-        if y.ndim > 1:
-            y = y.mean(axis=1)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        if sr != SR:
-            y = librosa.resample(y, orig_sr=sr, target_sr=SR)
+    if result.returncode != 0 or len(result.stdout) == 0:
+        raise RuntimeError(f"ffmpeg falhou: {path}")
 
-        return y.astype(np.float32)
+    y = np.frombuffer(result.stdout, np.float32)
 
-    except:
+    return y
 
-        cmd = [
-            "ffmpeg",
-            "-loglevel", "quiet",
-            "-i", str(path),
-            "-f", "f32le",
-            "-ac", "1",
-            "-ar", str(SR),
-            "-"
-        ]
-
-        out = subprocess.run(cmd, stdout=subprocess.PIPE).stdout
-
-        if len(out) == 0:
-            raise RuntimeError("ffmpeg falhou")
-
-        return np.frombuffer(out, np.float32)
 
 def normalize_db(S):
     S = np.clip(S, -80, 0)
