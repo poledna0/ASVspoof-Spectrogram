@@ -11,11 +11,16 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
+# Argumentos de Treino e Dev
 parser.add_argument("--img_dir_train", required=True)
 parser.add_argument("--img_dir_dev", required=True)
 parser.add_argument("--protocol_train", required=True)
 parser.add_argument("--protocol_dev", required=True)
 parser.add_argument("--model_name", required=True)
+
+# NOVOS Argumentos para Teste (Eval)
+parser.add_argument("--img_dir_eval", required=True, help="Diretorio das imagens de Teste/Eval")
+parser.add_argument("--protocol_eval", required=True, help="Arquivo de protocolo/chaves do Teste/Eval")
 
 args = parser.parse_args()
 
@@ -42,11 +47,12 @@ class ASVspoofCMDataset(Dataset):
                 parts = line.strip().split()
 
                 utt_id = parts[1]
+                # A chave no eval oficial também tem o label no final (bonafide ou spoof)
                 label = 0 if parts[-1] == "bonafide" else 1
 
                 self.samples.append((utt_id, label))
 
-        print(f"{len(self.samples)} samples loaded.")
+        print(f"{len(self.samples)} samples loaded from {protocol_file}.")
 
     def __len__(self):
         return len(self.samples)
@@ -71,10 +77,12 @@ def get_model():
         weights=models.EfficientNet_B0_Weights.IMAGENET1K_V1
     )
 
+    # Adaptando para 1 canal (espectrograma em tons de cinza)
     model.features[0][0] = nn.Conv2d(
         1, 32, kernel_size=3, stride=2, padding=1, bias=False
     )
 
+    # Classificador final para 2 classes (Bonafide vs Spoof)
     model.classifier[1] = nn.Linear(
         model.classifier[1].in_features, 2
     )
@@ -105,9 +113,11 @@ def validate_and_save(model, loader, score_path):
             x = x.to(DEVICE)
 
             logits = model(x)
+            # Pegamos o score da classe 1 (Spoof)
             spoof_scores = logits[:,1].cpu().numpy()
 
             for u, s, l in zip(utt, spoof_scores, y):
+                # Salvando no formato: <ID_DO_AUDIO> <SCORE_SPOOF>
                 lines.append(f"{u} {s}\n")
                 scores.append(s)
                 labels.append(l.item())
@@ -121,30 +131,17 @@ def validate_and_save(model, loader, score_path):
 
 def main():
 
-    train_ds = ASVspoofCMDataset(
-        args.img_dir_train,
-        args.protocol_train
-    )
-
-    dev_ds = ASVspoofCMDataset(
-        args.img_dir_dev,
-        args.protocol_dev
-    )
+    train_ds = ASVspoofCMDataset(args.img_dir_train, args.protocol_train)
+    dev_ds = ASVspoofCMDataset(args.img_dir_dev, args.protocol_dev)
 
     train_loader = DataLoader(
-        train_ds,
-        batch_size=BATCH_SIZE,
-        shuffle=True,
-        num_workers=6,
-        pin_memory=True
+        train_ds, batch_size=BATCH_SIZE, shuffle=True,
+        num_workers=6, pin_memory=True
     )
 
     dev_loader = DataLoader(
-        dev_ds,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        num_workers=6,
-        pin_memory=True
+        dev_ds, batch_size=BATCH_SIZE, shuffle=False,
+        num_workers=6, pin_memory=True
     )
 
     model = get_model().to(DEVICE)
@@ -159,6 +156,7 @@ def main():
     patience = 15
     epochs_without_improvement = 0
 
+    print("\n--- INICIANDO TREINAMENTO ---")
     for epoch in range(EPOCHS):
 
         model.train()
@@ -180,13 +178,9 @@ def main():
 
         train_loss = running_loss / len(train_loader)
 
-        score_file = f"scores/{args.model_name}_dev_scores.txt"
+        score_file_dev = f"scores/{args.model_name}_DEV_scores.txt"
 
-        eer = validate_and_save(
-            model,
-            dev_loader,
-            score_file
-        )
+        eer = validate_and_save(model, dev_loader, score_file_dev)
 
         print(
             f"[Epoch {epoch+1}/{EPOCHS}] "
@@ -195,27 +189,42 @@ def main():
         )
 
         if eer < best_eer:
-
             best_eer = eer
             epochs_without_improvement = 0
-
-            torch.save(
-                model.state_dict(),
-                f"checkpoints/{args.model_name}_best.pth"
-            )
-
-            print("BEST MODEL SALVO")
-
+            torch.save(model.state_dict(), f"checkpoints/{args.model_name}_best.pth")
+            print(">>> BEST MODEL SALVO")
         else:
             epochs_without_improvement += 1
-
             if epochs_without_improvement >= patience:
-                print("EARLY STOPPING")
+                print(">>> EARLY STOPPING ACIONADO")
                 break
 
+    print("\n--- TREINO FINALIZADO ---")
 
-    print("\nTreino finalizado.")
+    # ==========================================
+    # ETAPA DE TESTE (EVALUATION)
+    # ==========================================
+    print("\n--- INICIANDO INFERÊNCIA NO CONJUNTO DE AVALIAÇÃO (EVAL) ---")
+    
+    eval_ds = ASVspoofCMDataset(args.img_dir_eval, args.protocol_eval)
+    eval_loader = DataLoader(
+        eval_ds, batch_size=BATCH_SIZE, shuffle=False,
+        num_workers=6, pin_memory=True
+    )
 
+    # Carrega os pesos do MELHOR modelo encontrado durante o treino
+    best_model_path = f"checkpoints/{args.model_name}_best.pth"
+    model.load_state_dict(torch.load(best_model_path))
+    print(f"Pesos carregados de: {best_model_path}")
+
+    # Define onde o arquivo de scores finais será salvo
+    score_file_eval = f"scores/{args.model_name}_EVAL_scores.txt"
+    
+    # Roda a avaliação final
+    eval_eer = validate_and_save(model, eval_loader, score_file_eval)
+    
+    print(f"Eval EER (Estimado): {eval_eer:.2f}%")
+    print(f"ARQUIVO FINAL GERADO COM SUCESSO: {score_file_eval}")
 
 if __name__ == "__main__":
     main()
