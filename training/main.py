@@ -25,12 +25,11 @@ parser.add_argument("--protocol_eval", required=True, help="Arquivo de protocolo
 args = parser.parse_args()
 
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 1
 LR = 1e-4
 
-DEVICE = "cuda" 
-if torch.cuda.is_available():
-    print("Usando device:", DEVICE)
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+print("Usando device:", DEVICE)
 
 class ASVspoofCMDataset(Dataset):
 
