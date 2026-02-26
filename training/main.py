@@ -29,7 +29,7 @@ parser.add_argument("--protocol_eval", required=True)
 args = parser.parse_args()
 
 BATCH_SIZE = 32
-EPOCHS = 200
+EPOCHS = 100
 LR = 1e-4
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -178,7 +178,7 @@ def main():
     os.makedirs("scores", exist_ok=True)
 
     best_eer = 100
-    patience = 15
+    patience = 10
     epochs_without_improvement = 0
 
     print("\n--- INICIANDO TREINAMENTO ---")
