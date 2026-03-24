@@ -27,10 +27,11 @@ Desenvolver modelos capazes de diferenciar áudios reais (bonafide) de áudios r
   - LFCC
   - CQCC
 
-- Modelo:
+- Modelos:
   - EfficientNet-B0 (PyTorch)
   - CNN custom
   - ResNet-18
+  -...
 
 - Métrica principal:
   - EER (Equal Error Rate)
