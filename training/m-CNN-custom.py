@@ -138,12 +138,12 @@ def compute_confusion(y_true, scores, threshold):
     cm = confusion_matrix(y_true, y_pred)
     acc = accuracy_score(y_true, y_pred)
 
-    print("\n===== MATRIZ DE CONFUSÃO =====")
+    print("\nMATRIZ DE CONFUSÃO")
     print("Formato: [[TN FP] [FN TP]]")
     print(cm)
     print(f"Accuracy: {acc:.4f}\n")
 
-    print("===== CLASSIFICATION REPORT =====")
+    print("CLASSIFICATION REPORT")
     print(classification_report(
         y_true,
         y_pred,
@@ -178,7 +178,7 @@ def validate_and_save(model, loader, score_path, phase_name="DEV"):
 
     eer, eer_th = compute_eer(labels, scores)
 
-    print(f"\n--- RESULTADOS {phase_name} ---")
+    print(f"\nRESULTADOS {phase_name}")
     print(f"EER: {eer:.2f}%")
     print(f"EER Threshold: {eer_th:.6f}")
 
@@ -244,16 +244,16 @@ def main():
             epochs_without_improvement = 0
             torch.save(model.state_dict(),
                        f"checkpoints/{args.model_name}_best.pth")
-            print(">>> BEST MODEL SALVO")
+            print("BEST MODEL SALVO")
         else:
             epochs_without_improvement += 1
             if epochs_without_improvement >= patience:
-                print(">>> EARLY STOPPING ACIONADO")
+                print("EARLY STOPPING ACIONADO")
                 break
 
-    print("\n--- TREINO FINALIZADO ---")
+    print("\nTREINO FINALIZADO")
 
-    print("\n--- INICIANDO EVAL ---")
+    print("\nINICIANDO EVAL")
 
     eval_ds = ASVspoofCMDataset(args.img_dir_eval, args.protocol_eval)
     eval_loader = DataLoader(
