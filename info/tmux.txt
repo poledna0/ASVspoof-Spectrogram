@@ -1,0 +1,69 @@
+COMO USAR TMUX PARA CRIAR SESSÕES PERSISTENTES
+
+1. Instalar o tmux (caso não tenha)
+
+No Arch:
+sudo pacman -S tmux
+
+No Ubuntu/Debian:
+sudo apt install tmux
+
+2. Criar uma nova sessão
+
+tmux
+
+Isso já cria uma sessão nova e entra nela.
+
+Se quiser nomear a sessão:
+tmux new -s minha_sessao
+
+3. Trabalhar normalmente
+
+Dentro do tmux você usa o terminal normalmente, como qualquer shell.
+
+4. Sair da sessão sem matar (detach)
+
+Pressione:
+
+Ctrl + B, depois solte, e pressione D
+
+Isso faz o "detach" da sessão. Ela continua rodando em background.
+
+5. Listar sessões existentes
+
+tmux ls
+
+6. Voltar para uma sessão
+
+tmux attach -t minha_sessao
+
+ou, se tiver só uma:
+tmux attach
+
+7. Matar uma sessão
+
+tmux kill-session -t minha_sessao
+
+8. Dicas úteis
+
+* Criar nova janela dentro da sessão:
+  Ctrl + B, depois C
+
+* Trocar de janela:
+  Ctrl + B, depois N (next)
+  Ctrl + B, depois P (previous)
+
+* Dividir painel:
+  Ctrl + B, depois % (vertical)
+  Ctrl + B, depois " (horizontal)
+
+* Navegar entre painéis:
+  Ctrl + B, depois setas
+
+Resumo rápido:
+
+* Criar sessão: tmux new -s nome
+* Sair sem matar: Ctrl+B D
+* Voltar: tmux attach -t nome
+* Listar: tmux ls
+* Matar: tmux kill-session -t nome
