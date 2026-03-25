@@ -104,12 +104,12 @@ def compute_confusion(y_true, scores, threshold):
     cm = confusion_matrix(y_true, y_pred)
     acc = accuracy_score(y_true, y_pred)
 
-    print("\nMATRIZ DE CONFUSÃO
+    print("\nMATRIZ DE CONFUSÃO\n")
     print("Formato: [[TN FP] [FN TP]]")
     print(cm)
     print(f"Accuracy: {acc:.4f}\n")
 
-    print("CLASSIFICATION REPORT
+    print("CLASSIFICATION REPORT")
     print(classification_report(
         y_true,
         y_pred,
