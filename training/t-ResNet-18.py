@@ -177,8 +177,8 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
 
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', patience=3, factor=0.5, verbose=True
-    )
+    optimizer, mode='min', patience=3, factor=0.5
+)
 
     os.makedirs("checkpoints", exist_ok=True)
     os.makedirs("scores", exist_ok=True)
