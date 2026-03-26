@@ -80,7 +80,8 @@ def get_model():
     model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 
     model.fc = nn.Sequential(
-        nn.Dropout(0.3),
+        nn.Dropout(0.3), # regularização, reduz overfitting, modifica a ultima camada 
+        # fc (fully connected) Dropout é uma técnica de regularização: Durante o treino, 30% dos neurônios são “desligados” aleatoriamente
         nn.Linear(model.fc.in_features, 2)
     )
 
@@ -210,7 +211,7 @@ def main():
         score_file_dev = f"scores/{args.model_name}_DEV_scores.txt"
         eer = validate_and_save(model, dev_loader, score_file_dev, "DEV")
 
-        scheduler.step(eer)
+        scheduler.step(eer) # ------------------------------------------------------------------------------------------
 
         print(f"[Epoch {epoch+1}/{EPOCHS}] Loss: {train_loss:.4f}")
 
