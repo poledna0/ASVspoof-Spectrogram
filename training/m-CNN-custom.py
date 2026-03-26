@@ -110,7 +110,7 @@ parser.add_argument("--protocol_eval", required=True)
 
 args = parser.parse_args()
 
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 EPOCHS = 100
 LR = 1e-4
 

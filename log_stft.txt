@@ -1,1 +1,0 @@
-python3: can't open file '/home/henrique/pibic/git/ASVspoof-Spectrogram/training/main.py': [Errno 2] No such file or directory
