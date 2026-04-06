@@ -4,52 +4,52 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision import models
-from sklearn.metrics import (
-    roc_curve,
-    confusion_matrix,
-    classification_report,
-    accuracy_score
-)
+from sklearn.metrics import roc_curve, confusion_matrix, classification_report, accuracy_score
 from PIL import Image
 import torchvision.transforms as T
 import argparse
 
 parser = argparse.ArgumentParser()
-
-# Argumentos
 parser.add_argument("--img_dir_train", required=True)
 parser.add_argument("--img_dir_dev", required=True)
 parser.add_argument("--protocol_train", required=True)
 parser.add_argument("--protocol_dev", required=True)
 parser.add_argument("--model_name", required=True)
-
 parser.add_argument("--img_dir_eval", required=True)
 parser.add_argument("--protocol_eval", required=True)
-
 args = parser.parse_args()
 
 BATCH_SIZE = 32
 EPOCHS = 100
-LR = 1e-4
-
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-print("Usando device:", DEVICE)
+print("Device:", DEVICE)
 
+# =========================================================
+# DATASET + AUGMENTATION FORTE (CRUCIAL P/ EER)
+# =========================================================
 
 class ASVspoofCMDataset(Dataset):
-
-    def __init__(self, img_dir, protocol_file):
+    def __init__(self, img_dir, protocol_file, train=True):
         self.img_dir = img_dir
         self.samples = []
 
-        self.transform = T.Compose([
-            T.Resize((224, 224)),
-            T.ToTensor(),
-            T.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            )
-        ])
+        if train:
+            self.transform = T.Compose([
+                T.Resize((256,256)),
+                T.RandomResizedCrop(224, scale=(0.7,1.0)),
+                T.RandomHorizontalFlip(),
+                T.ColorJitter(0.2,0.2,0.2),
+                T.RandomGrayscale(p=0.1),
+                T.GaussianBlur(3, sigma=(0.1,2.0)),
+                T.ToTensor(),
+                T.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225])
+            ])
+        else:
+            self.transform = T.Compose([
+                T.Resize((224,224)),
+                T.ToTensor(),
+                T.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225])
+            ])
 
         with open(protocol_file) as f:
             for line in f:
@@ -58,195 +58,135 @@ class ASVspoofCMDataset(Dataset):
                 label = 0 if parts[-1] == "bonafide" else 1
                 self.samples.append((utt_id, label))
 
-        print(f"{len(self.samples)} samples loaded from {protocol_file}.")
+        print(len(self.samples), "samples loaded")
 
-    def __len__(self):
-        return len(self.samples)
+    def __len__(self): return len(self.samples)
 
     def __getitem__(self, idx):
         utt_id, label = self.samples[idx]
-        img_path = os.path.join(self.img_dir, utt_id + ".png")
+        img = Image.open(os.path.join(self.img_dir, utt_id+".png")).convert("RGB")
+        return self.transform(img), torch.tensor(label), utt_id
 
-        if not os.path.exists(img_path):
-            raise RuntimeError(f"Imagem faltando: {img_path}")
+# =========================================================
+# FOCAL LOSS + LABEL SMOOTHING (MELHOR PRA EER)
+# =========================================================
 
-        img = Image.open(img_path).convert("RGB")
-        spec = self.transform(img)
+class FocalLoss(nn.Module):
+    def __init__(self, gamma=2):
+        super().__init__()
+        self.gamma = gamma
+        self.ce = nn.CrossEntropyLoss(label_smoothing=0.1)
 
-        return spec, torch.tensor(label), utt_id
+    def forward(self, logits, targets):
+        ce_loss = self.ce(logits, targets)
+        pt = torch.exp(-ce_loss)
+        return ((1-pt)**self.gamma * ce_loss).mean()
 
+# =========================================================
+# RESNET50 + HEAD PROFUNDA
+# =========================================================
 
 def get_model():
-    model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+    backbone = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
+    in_features = backbone.fc.in_features
+    backbone.fc = nn.Identity()
 
-    model.fc = nn.Sequential(
-        nn.Dropout(0.3), # regularização, reduz overfitting, modifica a ultima camada 
-        # fc (fully connected) Dropout é uma técnica de regularização: Durante o treino, 30% dos neurônios são “desligados” aleatoriamente
-        nn.Linear(model.fc.in_features, 2)
+    head = nn.Sequential(
+        nn.BatchNorm1d(in_features),
+        nn.Dropout(0.5),
+        nn.Linear(in_features,256),
+        nn.ReLU(),
+        nn.BatchNorm1d(256),
+        nn.Dropout(0.5),
+        nn.Linear(256,2)
     )
+    return nn.Sequential(backbone, head)
 
-    return model
-
+# =========================================================
 
 def compute_eer(y_true, scores):
-    fpr, tpr, thresholds = roc_curve(y_true, scores, pos_label=1)
+    fpr, tpr, thr = roc_curve(y_true, scores, pos_label=1)
     fnr = 1 - tpr
+    idx = np.nanargmin(np.abs(fpr-fnr))
+    eer = (fpr[idx]+fnr[idx])/2
+    return eer*100, thr[idx]
 
-    idx = np.nanargmin(np.abs(fpr - fnr))
-    eer = (fpr[idx] + fnr[idx]) / 2
-    eer_threshold = thresholds[idx]
-
-    return eer * 100, eer_threshold
-
-
-def compute_confusion(y_true, scores, threshold):
-    y_pred = (scores >= threshold).astype(int)
-
-    cm = confusion_matrix(y_true, y_pred)
-    acc = accuracy_score(y_true, y_pred)
-
-    print("\n===== MATRIZ DE CONFUSÃO =====")
-    print("Formato: [[TN FP] [FN TP]]")
-    print(cm)
-    print(f"Accuracy: {acc:.4f}\n")
-
-    print("===== CLASSIFICATION REPORT =====")
-    print(classification_report(
-        y_true,
-        y_pred,
-        target_names=["bonafide", "spoof"]
-    ))
-
-
-def validate_and_save(model, loader, score_path, phase_name="DEV"):
-
+def validate(model, loader, phase):
     model.eval()
-
-    scores = []
-    labels = []
-    lines = []
-
+    scores, labels = [], []
     with torch.no_grad():
-        for x, y, utt in loader:
-            x = x.to(DEVICE)
-
-            logits = model(x)
-
-            probs = torch.softmax(logits, dim=1)
-            spoof_scores = probs[:, 1].cpu().numpy()
-
-            for u, s, l in zip(utt, spoof_scores, y):
-                lines.append(f"{u} {s}\n")
-                scores.append(s)
-                labels.append(l.item())
-
-    with open(score_path, "w") as f:
-        f.writelines(lines)
-
-    scores = np.array(scores)
-    labels = np.array(labels)
-
-    eer, eer_th = compute_eer(labels, scores)
-
-    print(f"\n--- RESULTADOS {phase_name} ---")
-    print(f"EER: {eer:.2f}%")
-    print(f"EER Threshold: {eer_th:.6f}")
-
-    compute_confusion(labels, scores, eer_th)
-
+        for x,y,_ in loader:
+            probs = torch.softmax(model(x.to(DEVICE)), dim=1)[:,1].cpu().numpy()
+            scores.extend(probs); labels.extend(y.numpy())
+    eer,_ = compute_eer(np.array(labels), np.array(scores))
+    print(f"{phase} EER: {eer:.3f}%")
     return eer
 
+# =========================================================
+# TRAIN
+# =========================================================
 
-def main():
+train_ds = ASVspoofCMDataset(args.img_dir_train, args.protocol_train, True)
+dev_ds   = ASVspoofCMDataset(args.img_dir_dev, args.protocol_dev, False)
 
-    train_ds = ASVspoofCMDataset(args.img_dir_train, args.protocol_train)
-    dev_ds = ASVspoofCMDataset(args.img_dir_dev, args.protocol_dev)
+train_loader = DataLoader(train_ds, BATCH_SIZE, shuffle=True, num_workers=6, pin_memory=True)
+dev_loader   = DataLoader(dev_ds, BATCH_SIZE, shuffle=False, num_workers=6, pin_memory=True)
 
-    train_loader = DataLoader(
-        train_ds, batch_size=BATCH_SIZE, shuffle=True,
-        num_workers=6, pin_memory=True
-    )
+model = get_model().to(DEVICE)
 
-    dev_loader = DataLoader(
-        dev_ds, batch_size=BATCH_SIZE, shuffle=False,
-        num_workers=6, pin_memory=True
-    )
+# FREEZE BACKBONE INICIO
+for p in model[0].parameters():
+    p.requires_grad = False
 
-    model = get_model().to(DEVICE)
+criterion = FocalLoss()
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
+optimizer = torch.optim.AdamW([
+    {"params": model[0].parameters(), "lr":1e-5},
+    {"params": model[1].parameters(), "lr":1e-4}
+], weight_decay=1e-4)
 
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode='min', patience=3, factor=0.5
-)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
 
-    os.makedirs("checkpoints", exist_ok=True)
-    os.makedirs("scores", exist_ok=True)
+best_eer = 100
+patience = 10
+no_improve = 0
 
-    best_eer = 100
-    patience = 10
-    epochs_without_improvement = 0
+for epoch in range(EPOCHS):
 
-    print("\n--- INICIANDO TREINAMENTO ---")
-    for epoch in range(EPOCHS):
+    # UNFREEZE depois de estabilizar head
+    if epoch == 5:
+        print("Unfreezing backbone")
+        for p in model[0].parameters():
+            p.requires_grad = True
 
-        model.train()
-        running_loss = 0
+    model.train()
+    for x,y,_ in train_loader:
+        x,y = x.to(DEVICE), y.to(DEVICE)
+        optimizer.zero_grad()
+        loss = criterion(model(x), y)
+        loss.backward()
+        optimizer.step()
 
-        for x, y, _ in train_loader:
-            x, y = x.to(DEVICE), y.to(DEVICE)
+    scheduler.step()
+    eer = validate(model, dev_loader, "DEV")
 
-            optimizer.zero_grad()
-            out = model(x)
-            loss = criterion(out, y)
+    if eer < best_eer:
+        best_eer = eer
+        no_improve = 0
+        torch.save(model.state_dict(), f"{args.model_name}_best.pth")
+        print("BEST MODEL SAVED")
+    else:
+        no_improve += 1
+        if no_improve >= patience:
+            print("EARLY STOP")
+            break
 
-            loss.backward()
-            optimizer.step()
+# =========================================================
+# EVAL FINAL
+# =========================================================
 
-            running_loss += loss.item()
-
-        train_loss = running_loss / len(train_loader)
-
-        score_file_dev = f"scores/{args.model_name}_DEV_scores.txt"
-        eer = validate_and_save(model, dev_loader, score_file_dev, "DEV")
-
-        scheduler.step(eer) # ------------------------------------------------------------------------------------------
-
-        print(f"[Epoch {epoch+1}/{EPOCHS}] Loss: {train_loss:.4f}")
-
-        if eer < best_eer:
-            best_eer = eer
-            epochs_without_improvement = 0
-            torch.save(model.state_dict(),
-                       f"checkpoints/{args.model_name}_best.pth")
-            print(">>> BEST MODEL SALVO")
-        else:
-            epochs_without_improvement += 1
-            if epochs_without_improvement >= patience:
-                print(">>> EARLY STOPPING ACIONADO")
-                break
-
-    print("\n--- TREINO FINALIZADO ---")
-
-    print("\n--- INICIANDO EVAL ---")
-
-    eval_ds = ASVspoofCMDataset(args.img_dir_eval, args.protocol_eval)
-    eval_loader = DataLoader(
-        eval_ds, batch_size=BATCH_SIZE, shuffle=False,
-        num_workers=6, pin_memory=True
-    )
-
-    best_model_path = f"checkpoints/{args.model_name}_best.pth"
-    model.load_state_dict(torch.load(best_model_path))
-    print(f"Pesos carregados de: {best_model_path}")
-
-    score_file_eval = f"scores/{args.model_name}_EVAL_scores.txt"
-
-    validate_and_save(model, eval_loader, score_file_eval, "EVAL")
-
-    print(f"\nARQUIVO FINAL GERADO: {score_file_eval}")
-
-
-if __name__ == "__main__":
-    main()
+print("\nFinal evaluation")
+model.load_state_dict(torch.load(f"{args.model_name}_best.pth"))
+eval_ds = ASVspoofCMDataset(args.img_dir_eval, args.protocol_eval, False)
+eval_loader = DataLoader(eval_ds, BATCH_SIZE, shuffle=False)
+validate(model, eval_loader, "EVAL")
