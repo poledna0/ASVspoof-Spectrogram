@@ -79,17 +79,9 @@ class ASVspoofCMDataset(Dataset):
 def get_model():
     model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 
-    # congela TODA a rede
-    for param in model.parameters():
-        param.requires_grad = False
-
-    # descongela apenas a última stage convolucional (Layer4)
-    for param in model.layer4.parameters():
-        param.requires_grad = True
-
-    # substitui o classificador
     model.fc = nn.Sequential(
-        nn.Dropout(0.3),
+        nn.Dropout(0.3), # regularização, reduz overfitting, modifica a ultima camada 
+        # fc (fully connected) Dropout é uma técnica de regularização: Durante o treino, 30% dos neurônios são “desligados” aleatoriamente
         nn.Linear(model.fc.in_features, 2)
     )
 
@@ -183,11 +175,8 @@ def main():
     model = get_model().to(DEVICE)
 
     criterion = nn.CrossEntropyLoss()
-    
-    optimizer = torch.optim.AdamW(
-        filter(lambda p: p.requires_grad, model.parameters()),
-        lr=LR
-    )
+    optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
+
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, factor=0.5
 )
