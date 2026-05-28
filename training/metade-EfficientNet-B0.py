@@ -13,6 +13,7 @@ from sklearn.metrics import (
 from PIL import Image
 import torchvision.transforms as T
 import argparse
+from datetime import datetime
 
 parser = argparse.ArgumentParser()
 
@@ -71,26 +72,40 @@ class ASVspoofCMDataset(Dataset):
 
 
 def get_model():
+
     model = models.efficientnet_b0(
         weights=models.EfficientNet_B0_Weights.IMAGENET1K_V1
     )
 
     model.features[0][0] = nn.Conv2d(
-        1, 32, kernel_size=3, stride=2, padding=1, bias=False
+        1,
+        32,
+        kernel_size=3,
+        stride=2,
+        padding=1,
+        bias=False
     )
 
     model.classifier[1] = nn.Linear(
-        model.classifier[1].in_features, 2
+        model.classifier[1].in_features,
+        2
     )
 
     return model
 
 
 def compute_eer(y_true, scores):
-    fpr, tpr, thresholds = roc_curve(y_true, scores, pos_label=1)
+
+    fpr, tpr, thresholds = roc_curve(
+        y_true,
+        scores,
+        pos_label=1
+    )
+
     fnr = 1 - tpr
 
     idx = np.nanargmin(np.abs(fpr - fnr))
+
     eer = (fpr[idx] + fnr[idx]) / 2
     eer_threshold = thresholds[idx]
 
@@ -98,17 +113,21 @@ def compute_eer(y_true, scores):
 
 
 def compute_confusion(y_true, scores, threshold):
+
     y_pred = (scores > threshold).astype(int)
 
     cm = confusion_matrix(y_true, y_pred)
+
     acc = accuracy_score(y_true, y_pred)
 
     print("\nMATRIZ DE CONFUSÃO")
     print("Formato: [[TN FP] [FN TP]]")
     print(cm)
+
     print(f"Accuracy: {acc:.4f}\n")
 
     print("CLASSIFICATION REPORT")
+
     print(classification_report(
         y_true,
         y_pred,
@@ -125,14 +144,21 @@ def validate_and_save(model, loader, score_path, phase_name="DEV"):
     lines = []
 
     with torch.no_grad():
+
         for x, y, utt in loader:
+
             x = x.to(DEVICE)
+
             logits = model(x)
+
             spoof_scores = logits[:, 1].cpu().numpy()
 
             for u, s, l in zip(utt, spoof_scores, y):
+
                 lines.append(f"{u} {s}\n")
+
                 scores.append(s)
+
                 labels.append(l.item())
 
     with open(score_path, "w") as f:
@@ -154,81 +180,165 @@ def validate_and_save(model, loader, score_path, phase_name="DEV"):
 
 def main():
 
-    train_ds = ASVspoofCMDataset(args.img_dir_train, args.protocol_train)
-    dev_ds = ASVspoofCMDataset(args.img_dir_dev, args.protocol_dev)
+    train_ds = ASVspoofCMDataset(
+        args.img_dir_train,
+        args.protocol_train
+    )
+
+    dev_ds = ASVspoofCMDataset(
+        args.img_dir_dev,
+        args.protocol_dev
+    )
 
     train_loader = DataLoader(
-        train_ds, batch_size=BATCH_SIZE, shuffle=True,
-        num_workers=6, pin_memory=True
+        train_ds,
+        batch_size=BATCH_SIZE,
+        shuffle=True,
+        num_workers=6,
+        pin_memory=True
     )
 
     dev_loader = DataLoader(
-        dev_ds, batch_size=BATCH_SIZE, shuffle=False,
-        num_workers=6, pin_memory=True
+        dev_ds,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=6,
+        pin_memory=True
     )
 
     model = get_model().to(DEVICE)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
+
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=LR
+    )
 
     # Scheduler de LR
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', patience=3, factor=0.5
+        optimizer,
+        mode='min',
+        patience=3,
+        factor=0.5
     )
 
-    os.makedirs("checkpoints", exist_ok=True)
-    os.makedirs("scores", exist_ok=True)
+    # =========================
+    # Pastas únicas por execução
+    # =========================
+
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    output_dir = os.path.join(
+        "runs",
+        f"{args.model_name}_{run_id}"
+    )
+
+    checkpoints_dir = os.path.join(
+        output_dir,
+        "checkpoints"
+    )
+
+    scores_dir = os.path.join(
+        output_dir,
+        "scores"
+    )
+
+    os.makedirs(checkpoints_dir, exist_ok=True)
+    os.makedirs(scores_dir, exist_ok=True)
+
+    print(f"\nSALVANDO RESULTADOS EM: {output_dir}")
+
+    # =========================
 
     best_eer = 100
+
     patience = 10
+
     epochs_without_improvement = 0
 
     print("\nINICIANDO TREINAMENTO")
+
     for epoch in range(EPOCHS):
 
         model.train()
+
         running_loss = 0
 
         for x, y, _ in train_loader:
-            x, y = x.to(DEVICE), y.to(DEVICE)
+
+            x = x.to(DEVICE)
+            y = y.to(DEVICE)
 
             optimizer.zero_grad()
+
             out = model(x)
+
             loss = criterion(out, y)
 
             loss.backward()
+
             optimizer.step()
 
             running_loss += loss.item()
 
         train_loss = running_loss / len(train_loader)
 
-        score_file_dev = f"scores/{args.model_name}_DEV_scores.txt"
-        eer = validate_and_save(model, dev_loader, score_file_dev, "DEV")
+        score_file_dev = os.path.join(
+            scores_dir,
+            f"{args.model_name}_DEV_scores.txt"
+        )
+
+        eer = validate_and_save(
+            model,
+            dev_loader,
+            score_file_dev,
+            "DEV"
+        )
 
         # Atualiza o scheduler baseado no EER
         scheduler.step(eer)
 
-        print(f"[Epoch {epoch+1}/{EPOCHS}] "
-              f"Loss: {train_loss:.4f}")
+        print(
+            f"[Epoch {epoch+1}/{EPOCHS}] "
+            f"Loss: {train_loss:.4f}"
+        )
 
         if eer < best_eer:
+
             best_eer = eer
+
             epochs_without_improvement = 0
-            torch.save(model.state_dict(),
-                       f"checkpoints/{args.model_name}_best.pth")
+
+            best_model_path = os.path.join(
+                checkpoints_dir,
+                f"{args.model_name}_best.pth"
+            )
+
+            torch.save(
+                model.state_dict(),
+                best_model_path
+            )
+
             print("BEST MODEL SALVO")
+
         else:
+
             epochs_without_improvement += 1
+
             if epochs_without_improvement >= patience:
+
                 print("EARLY STOPPING ACIONADO")
+
                 break
 
     print("\nTREINO FINALIZADO")
+
     print(f"\nMELHOR EER DEV: {best_eer:.2f}%")
-    print(f"MODELO SALVO EM: checkpoints/{args.model_name}_best.pth")
-    print(f"SCORES DEV SALVOS EM: scores/{args.model_name}_DEV_scores.txt")
+
+    print(f"MODELO SALVO EM: {best_model_path}")
+
+    print(f"SCORES DEV SALVOS EM: {score_file_dev}")
 
 
 if __name__ == "__main__":
