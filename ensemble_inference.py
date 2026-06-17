@@ -265,8 +265,13 @@ class EnsemblePipeline:
                 utt = [u for u, v in zip(utt, valid_mask) if v]
                 
                 logits = model(x)
-                probs = torch.softmax(logits, dim=1)
-                spoof_scores = probs[:, 1].cpu().numpy()
+                if "EfficientNet" in model_name:
+                    spoof_scores = logits[:, 1].cpu().numpy()
+                elif "ResNet" in model_name:
+                    probs = torch.softmax(logits, dim=1)
+                    spoof_scores = probs[:, 1].cpu().numpy()
+                else:
+                    raise ValueError(f"Arquitetura desconhecida para score: {model_name}")
                 
                 for u, s, l in zip(utt, spoof_scores, y.numpy()):
                     scores_dict[u] = float(s)
