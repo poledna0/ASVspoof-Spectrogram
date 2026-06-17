@@ -50,54 +50,19 @@ def setup_logger(log_file):
 # ==========================================
 ENSEMBLES = [
     {
-        "id": 1,
+        "id": "01",
         "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_logmel', 'EfficientNet-B0_stft', 'ResNet-18v2_cqt'],
         "weights": [0.170, 0.461, 0.191, 0.178]
     },
     {
-        "id": 2,
+        "id": "02",
         "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_cqt', 'EfficientNet-B0_logmel', 'ResNet-18v2_stft'],
         "weights": [0.234, 0.268, 0.287, 0.211]
     },
     {
-        "id": 3,
+        "id": "03",
         "models": ['EfficientNet-B0_logmel', 'EfficientNet-B0_stft', 'ResNet-18v2_cqt', 'ResNet-18v2_stft'],
         "weights": [0.275, 0.300, 0.223, 0.201]
-    },
-    {
-        "id": 4,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_stft', 'ResNet-18v2_cqt', 'ResNet-18v2_logmel'],
-        "weights": [0.181, 0.213, 0.186, 0.420]
-    },
-    {
-        "id": 5,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_cqt', 'EfficientNet-B0_stft', 'ResNet-18v2_logmel'],
-        "weights": [0.194, 0.227, 0.196, 0.383]
-    },
-    {
-        "id": 6,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_cqt', 'EfficientNet-B0_logmel', 'ResNet-18v2_logmel'],
-        "weights": [0.207, 0.226, 0.389, 0.178]
-    },
-    {
-        "id": 7,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_logmel', 'ResNet-18v2_cqt', 'ResNet-18v2_stft'],
-        "weights": [0.252, 0.289, 0.260, 0.199]
-    },
-    {
-        "id": 8,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_cqt', 'EfficientNet-B0_logmel', 'EfficientNet-B0_stft'],
-        "weights": [0.143, 0.256, 0.449, 0.152]
-    },
-    {
-        "id": 9,
-        "models": ['EfficientNet-B0_logmel', 'EfficientNet-B0_stft', 'ResNet-18v2_cqt', 'ResNet-18v2_logmel'],
-        "weights": [0.191, 0.355, 0.225, 0.229]
-    },
-    {
-        "id": 10,
-        "models": ['EfficientNet-B0_cqcc', 'EfficientNet-B0_cqt', 'EfficientNet-B0_stft', 'ResNet-18v2_stft'],
-        "weights": [0.225, 0.294, 0.224, 0.257]
     }
 ]
 
@@ -215,14 +180,16 @@ class EnsemblePipeline:
         
         self.results_dir = Path("ensemble_results")
         self.results_dir.mkdir(parents=True, exist_ok=True)
-        (self.results_dir / "predictions").mkdir(exist_ok=True)
-        (self.results_dir / "models_info").mkdir(exist_ok=True)
-        (self.results_dir / "metrics").mkdir(exist_ok=True)
+        (self.results_dir / "logs").mkdir(exist_ok=True)
+        
+        for ensemble in ENSEMBLES:
+            (self.results_dir / f"ensemble_{ensemble['id']}").mkdir(exist_ok=True)
         
         self.models_to_load = self._get_unique_models()
         self.model_predictions = {}
         self.ground_truth = {}
         self.loaded_checkpoints = {}
+        self.inference_times = {}
         
         self.asv_scores = None
         if em is not None and self.args.asv_scores_file:
@@ -311,6 +278,8 @@ class EnsemblePipeline:
         elapsed = time.time() - start_time
         avg_time = (elapsed / valid_samples) * 1000 if valid_samples > 0 else 0
         
+        self.inference_times[model_name] = elapsed
+        
         self.logger.info(f"Inferência concluída para {model_name}: {valid_samples} amostras processadas em {elapsed:.2f}s ({avg_time:.2f} ms/amostra)")
         self.model_predictions[model_name] = scores_dict
         return True
@@ -320,8 +289,6 @@ class EnsemblePipeline:
             self.logger.error("Nenhuma predição de modelo disponível.")
             return
 
-        all_metrics = {}
-        
         common_utts = set(self.ground_truth.keys())
         for preds in self.model_predictions.values():
             common_utts = common_utts.intersection(preds.keys())
@@ -335,6 +302,8 @@ class EnsemblePipeline:
         bonafide_mask = y_true == 0
         spoof_mask = y_true == 1
         
+        summary_data = []
+
         for ensemble in ENSEMBLES:
             eid = ensemble['id']
             models_list = ensemble['models']
@@ -347,12 +316,26 @@ class EnsemblePipeline:
                 
             ensemble_scores = np.zeros(len(common_utts))
             
+            scores_df_data = {
+                'ID': common_utts,
+                'classe_real': ['bonafide' if l == 0 else 'spoof' for l in y_true]
+            }
+            
+            total_time = 0.0
+            
             for m, w in zip(models_list, weights):
                 m_scores = np.array([self.model_predictions[m][u] for u in common_utts])
                 ensemble_scores += w * m_scores
+                scores_df_data[f'score_{m}'] = m_scores
+                scores_df_data[f'peso_{m}'] = w
+                
+                total_time += self.inference_times.get(m, 0.0)
                 
             eer, eer_th = compute_eer(y_true, ensemble_scores)
             metrics_dict = evaluate_metrics(y_true, ensemble_scores, eer_th)
+            
+            scores_df_data['score_final'] = ensemble_scores
+            scores_df_data['decisao_final'] = ['spoof' if s >= eer_th else 'bonafide' for s in ensemble_scores]
             
             min_tdcf = float('inf')
             if self.asv_scores is not None and em is not None:
@@ -372,13 +355,19 @@ class EnsemblePipeline:
                 except Exception as e:
                     self.logger.error(f"Erro no t-DCF para Ensemble {eid}: {e}")
             
+            avg_time_per_sample = (total_time / len(common_utts)) * 1000 if len(common_utts) > 0 else 0
+            
             metrics_dict.update({
                 "eer_percent": float(eer * 100),
                 "eer_threshold": float(eer_th),
-                "min_tdcf": float(min_tdcf)
+                "min_tdcf": float(min_tdcf),
+                "total_inference_time_s": float(total_time),
+                "avg_time_per_sample_ms": float(avg_time_per_sample)
             })
             
-            all_metrics[f"Ensemble_{eid:02d}"] = metrics_dict
+            y_pred = (ensemble_scores >= eer_th).astype(int)
+            cm = confusion_matrix(y_true, y_pred)
+            cm_df = pd.DataFrame(cm, index=['Real_Bonafide', 'Real_Spoof'], columns=['Pred_Bonafide', 'Pred_Spoof'])
             
             self.logger.info(f"\n--- Resultados Ensemble {eid} ---")
             self.logger.info(f"Modelos: {models_list}")
@@ -387,31 +376,38 @@ class EnsemblePipeline:
             if min_tdcf != float('inf'):
                 self.logger.info(f"min-tDCF: {min_tdcf:.6f}")
                 
-            preds_df = pd.DataFrame({
-                'utt_id': common_utts,
-                'label': y_true,
-                'score': ensemble_scores
-            })
-            preds_df.to_csv(self.results_dir / "predictions" / f"Ensemble_{eid:02d}_scores.csv", index=False)
+            ens_dir = self.results_dir / f"ensemble_{eid}"
             
-            with open(self.results_dir / "metrics" / f"Ensemble_{eid:02d}_metrics.json", "w") as f:
+            pd.DataFrame(scores_df_data).to_csv(ens_dir / "scores.csv", index=False)
+            cm_df.to_csv(ens_dir / "confusion_matrix.csv")
+            
+            with open(ens_dir / "metrics.json", "w") as f:
                 json.dump(metrics_dict, f, indent=4)
                 
-        with open(self.results_dir / "models_info" / "loaded_models.json", "w") as f:
-            json.dump({
-                "total_samples": len(common_utts),
-                "checkpoints": self.loaded_checkpoints
-            }, f, indent=4)
+            summary_data.append({
+                "Ensemble": f"Ensemble {eid}",
+                "Modelos": " + ".join([m.split('_')[1].upper() for m in models_list]),
+                "EER": f"{eer*100:.4f}%",
+                "min-tDCF": f"{min_tdcf:.6f}",
+                "Accuracy": f"{metrics_dict['accuracy']:.4f}",
+                "F1-score": f"{metrics_dict['f1_score']:.4f}",
+                "ROC AUC": f"{metrics_dict['roc_auc']:.4f}",
+                "Tempo": f"{total_time:.2f}s"
+            })
+                
+        if summary_data:
+            summary_df = pd.DataFrame(summary_data)
+            summary_df.to_csv(self.results_dir / "summary.csv", index=False)
 
     def execute(self):
-        self.logger.info("Iniciando pipeline de inferência de ensemble...")
+        self.logger.info("Iniciando pipeline de inferência de ensemble (EVAL)...")
         for model in self.models_to_load:
             self.run_inference_for_model(model)
         self.calculate_ensemble_scores()
         self.logger.info("Pipeline concluído. Resultados salvos em 'ensemble_results'.")
 
 def main():
-    parser = argparse.ArgumentParser(description="Inference para Ensembles - ASVspoof 2019")
+    parser = argparse.ArgumentParser(description="Inference para Ensembles - ASVspoof 2019 (EVAL)")
     parser.add_argument("--data_root", type=str, default="/home/henrique/pibic/data-set-asv", help="Diretório raiz dos datasets gerados")
     parser.add_argument("--protocol_file", type=str, default="PA_cm_protocols/ASVspoof2019.PA.cm.eval.trl.txt", help="Caminho para o protocolo de eval")
     parser.add_argument("--checkpoints_dir", type=str, default="checkpoints", help="Diretório para buscar pesos .pth")
