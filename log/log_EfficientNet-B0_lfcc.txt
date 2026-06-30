@@ -1,0 +1,414 @@
+Usando device: cuda
+54000 samples loaded from /home/henrique/pibic/git/ASVspoof-Spectrogram/PA_cm_protocols/ASVspoof2019.PA.cm.train.trn.txt.
+29700 samples loaded from /home/henrique/pibic/git/ASVspoof-Spectrogram/PA_cm_protocols/ASVspoof2019.PA.cm.dev.trl.txt.
+
+SALVANDO RESULTADOS EM: runs/EfficientNet-B0_lfcc_20260617_143216
+
+INICIANDO TREINAMENTO
+
+RESULTADOS DEV
+EER: 6.56%
+EER Threshold: 0.799975
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5047   353]
+ [ 1595 22705]]
+Accuracy: 0.9344
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.76      0.93      0.84      5400
+       spoof       0.98      0.93      0.96     24300
+
+    accuracy                           0.93     29700
+   macro avg       0.87      0.93      0.90     29700
+weighted avg       0.94      0.93      0.94     29700
+
+[Epoch 1/100] Loss: 0.1271
+BEST MODEL SALVO
+
+RESULTADOS DEV
+EER: 6.26%
+EER Threshold: 1.751202
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5063   337]
+ [ 1521 22779]]
+Accuracy: 0.9374
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.77      0.94      0.84      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.88      0.94      0.90     29700
+weighted avg       0.95      0.94      0.94     29700
+
+[Epoch 2/100] Loss: 0.0622
+BEST MODEL SALVO
+
+RESULTADOS DEV
+EER: 6.05%
+EER Threshold: -0.157996
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5074   326]
+ [ 1472 22828]]
+Accuracy: 0.9395
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.78      0.94      0.85      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.88      0.94      0.91     29700
+weighted avg       0.95      0.94      0.94     29700
+
+[Epoch 3/100] Loss: 0.0436
+BEST MODEL SALVO
+
+RESULTADOS DEV
+EER: 6.29%
+EER Threshold: 3.685624
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5061   339]
+ [ 1528 22772]]
+Accuracy: 0.9371
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.77      0.94      0.84      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.88      0.94      0.90     29700
+weighted avg       0.95      0.94      0.94     29700
+
+[Epoch 4/100] Loss: 0.0328
+
+RESULTADOS DEV
+EER: 6.25%
+EER Threshold: 3.485693
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5062   338]
+ [ 1519 22781]]
+Accuracy: 0.9375
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.77      0.94      0.85      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.88      0.94      0.90     29700
+weighted avg       0.95      0.94      0.94     29700
+
+[Epoch 5/100] Loss: 0.0251
+
+RESULTADOS DEV
+EER: 6.85%
+EER Threshold: 4.608017
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5031   369]
+ [ 1665 22635]]
+Accuracy: 0.9315
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.75      0.93      0.83      5400
+       spoof       0.98      0.93      0.96     24300
+
+    accuracy                           0.93     29700
+   macro avg       0.87      0.93      0.89     29700
+weighted avg       0.94      0.93      0.93     29700
+
+[Epoch 6/100] Loss: 0.0199
+
+RESULTADOS DEV
+EER: 6.44%
+EER Threshold: 2.040054
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5053   347]
+ [ 1567 22733]]
+Accuracy: 0.9356
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.76      0.94      0.84      5400
+       spoof       0.98      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.87      0.94      0.90     29700
+weighted avg       0.94      0.94      0.94     29700
+
+[Epoch 7/100] Loss: 0.0172
+
+RESULTADOS DEV
+EER: 4.30%
+EER Threshold: 1.800639
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5169   231]
+ [ 1045 23255]]
+Accuracy: 0.9570
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.83      0.96      0.89      5400
+       spoof       0.99      0.96      0.97     24300
+
+    accuracy                           0.96     29700
+   macro avg       0.91      0.96      0.93     29700
+weighted avg       0.96      0.96      0.96     29700
+
+[Epoch 8/100] Loss: 0.0079
+BEST MODEL SALVO
+
+RESULTADOS DEV
+EER: 4.47%
+EER Threshold: 1.977561
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5160   240]
+ [ 1086 23214]]
+Accuracy: 0.9554
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.83      0.96      0.89      5400
+       spoof       0.99      0.96      0.97     24300
+
+    accuracy                           0.96     29700
+   macro avg       0.91      0.96      0.93     29700
+weighted avg       0.96      0.96      0.96     29700
+
+[Epoch 9/100] Loss: 0.0065
+
+RESULTADOS DEV
+EER: 5.18%
+EER Threshold: 3.110208
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5121   279]
+ [ 1256 23044]]
+Accuracy: 0.9483
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.80      0.95      0.87      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.90      0.95      0.92     29700
+weighted avg       0.95      0.95      0.95     29700
+
+[Epoch 10/100] Loss: 0.0073
+
+RESULTADOS DEV
+EER: 5.43%
+EER Threshold: 2.380778
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5108   292]
+ [ 1320 22980]]
+Accuracy: 0.9457
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.79      0.95      0.86      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.89      0.95      0.91     29700
+weighted avg       0.95      0.95      0.95     29700
+
+[Epoch 11/100] Loss: 0.0053
+
+RESULTADOS DEV
+EER: 5.00%
+EER Threshold: 2.162524
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5130   270]
+ [ 1211 23089]]
+Accuracy: 0.9501
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.81      0.95      0.87      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.90      0.95      0.92     29700
+weighted avg       0.96      0.95      0.95     29700
+
+[Epoch 12/100] Loss: 0.0056
+
+RESULTADOS DEV
+EER: 4.98%
+EER Threshold: 2.448899
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5132   268]
+ [ 1211 23089]]
+Accuracy: 0.9502
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.81      0.95      0.87      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.90      0.95      0.92     29700
+weighted avg       0.96      0.95      0.95     29700
+
+[Epoch 13/100] Loss: 0.0036
+
+RESULTADOS DEV
+EER: 5.71%
+EER Threshold: 2.045069
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5093   307]
+ [ 1390 22910]]
+Accuracy: 0.9429
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.79      0.94      0.86      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.89      0.94      0.91     29700
+weighted avg       0.95      0.94      0.94     29700
+
+[Epoch 14/100] Loss: 0.0025
+
+RESULTADOS DEV
+EER: 4.50%
+EER Threshold: 2.448267
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5157   243]
+ [ 1093 23207]]
+Accuracy: 0.9550
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.83      0.95      0.89      5400
+       spoof       0.99      0.96      0.97     24300
+
+    accuracy                           0.96     29700
+   macro avg       0.91      0.96      0.93     29700
+weighted avg       0.96      0.96      0.96     29700
+
+[Epoch 15/100] Loss: 0.0025
+
+RESULTADOS DEV
+EER: 5.67%
+EER Threshold: 4.020750
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5095   305]
+ [ 1379 22921]]
+Accuracy: 0.9433
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.79      0.94      0.86      5400
+       spoof       0.99      0.94      0.96     24300
+
+    accuracy                           0.94     29700
+   macro avg       0.89      0.94      0.91     29700
+weighted avg       0.95      0.94      0.95     29700
+
+[Epoch 16/100] Loss: 0.0027
+
+RESULTADOS DEV
+EER: 4.65%
+EER Threshold: 2.658871
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5150   250]
+ [ 1129 23171]]
+Accuracy: 0.9536
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.82      0.95      0.88      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.90      0.95      0.93     29700
+weighted avg       0.96      0.95      0.95     29700
+
+[Epoch 17/100] Loss: 0.0015
+
+RESULTADOS DEV
+EER: 4.75%
+EER Threshold: 3.104398
+
+MATRIZ DE CONFUSÃO
+Formato: [[TN FP] [FN TP]]
+[[ 5144   256]
+ [ 1156 23144]]
+Accuracy: 0.9525
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    bonafide       0.82      0.95      0.88      5400
+       spoof       0.99      0.95      0.97     24300
+
+    accuracy                           0.95     29700
+   macro avg       0.90      0.95      0.92     29700
+weighted avg       0.96      0.95      0.95     29700
+
+[Epoch 18/100] Loss: 0.0017
+EARLY STOPPING ACIONADO
+
+TREINO FINALIZADO
+
+MELHOR EER DEV: 4.30%
+MODELO SALVO EM: runs/EfficientNet-B0_lfcc_20260617_143216/checkpoints/EfficientNet-B0_lfcc_best.pth
+SCORES DEV SALVOS EM: runs/EfficientNet-B0_lfcc_20260617_143216/scores/EfficientNet-B0_lfcc_DEV_scores.txt
