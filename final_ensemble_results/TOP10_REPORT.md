@@ -4,7 +4,7 @@
 
 - Base de seleção (DEV): scores dentro das subpastas de `checkpoints/runs-Jun-1/*/scores/`.
 - Avaliação final (EVAL): `scores/<arquitetura>/<feature>_EVAL_scores.txt`.
-- Mapeamento completo da origem por modelo: `metadata/score_sources.json`.
+- Origem detalhada por modelo: `metadata/score_sources.json`.
 
 ## Melhor ensemble final
 
@@ -14,13 +14,7 @@
 - min-tDCF (EVAL): `0.024222`
 - Score final tDCF: `final/CM_EVAL_TOP1.txt`
 
-## Por que esse top1 ficou em primeiro
-
-- Boa complementaridade entre duas arquiteturas e múltiplas features.
-- Pesos distribuídos sem colapsar em um único modelo.
-- Melhor equilíbrio entre min-tDCF e EER no EVAL após seleção com base DEV dos checkpoints.
-
-## Arquivos principais
+## Artefatos principais
 
 - `top10/summary.csv`
 - `top10/ensemble_07/metrics.json`
