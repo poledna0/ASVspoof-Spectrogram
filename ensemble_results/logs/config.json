@@ -1,7 +1,0 @@
-{
-    "data_root": "/home/henrique/pibic/data-set-asv",
-    "protocol_file": "PA_cm_protocols/ASVspoof2019.PA.cm.eval.trl.txt",
-    "checkpoints_dir": "checkpoints",
-    "asv_scores_file": "PA_scores/ASVspoof2019.PA.asv.eval.gi.trl.scores.txt",
-    "batch_size": 32
-}
