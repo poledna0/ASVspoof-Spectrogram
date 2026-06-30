@@ -89,12 +89,21 @@ def find_checkpoints(checkpoints_dir: Path) -> Dict[str, str]:
     return ckpts
 
 
-def model_to_score_paths(root: Path, model_name: str) -> Tuple[Path, Path]:
+def model_to_root_score_paths(root: Path, model_name: str) -> Tuple[Path, Path]:
     arch, feature = model_name.split("_", 1)
     score_dir = root / "scores" / arch
     return (
         score_dir / f"{feature}_DEV_scores.txt",
         score_dir / f"{feature}_EVAL_scores.txt",
+    )
+
+
+def model_to_checkpoint_score_paths(checkpoint_file: Path, model_name: str) -> Tuple[Path, Path]:
+    run_dir = checkpoint_file.parents[1]
+    score_dir = run_dir / "scores"
+    return (
+        score_dir / f"{model_name}_DEV_scores.txt",
+        score_dir / f"{model_name}_EVAL_scores.txt",
     )
 
 
@@ -199,8 +208,15 @@ def main() -> None:
     model_eval_scores: Dict[str, Dict[str, float]] = {}
     spoof_higher_map: Dict[str, bool] = {}
 
+    score_source = {}
     for model_name in sorted(ckpts.keys()):
-        dev_path, eval_path = model_to_score_paths(root, model_name)
+        ckpt_file = Path(ckpts[model_name])
+        ck_dev_path, ck_eval_path = model_to_checkpoint_score_paths(ckpt_file, model_name)
+        root_dev_path, root_eval_path = model_to_root_score_paths(root, model_name)
+
+        dev_path = ck_dev_path if ck_dev_path.exists() else root_dev_path
+        eval_path = ck_eval_path if ck_eval_path.exists() else root_eval_path
+
         if not dev_path.exists() or not eval_path.exists():
             logger.warning("Modelo %s ignorado: score DEV/EVAL ausente", model_name)
             continue
@@ -221,6 +237,10 @@ def main() -> None:
         model_dev_scores[model_name] = dev_scores
         model_eval_scores[model_name] = eval_scores
         spoof_higher_map[model_name] = spoof_higher
+        score_source[model_name] = {
+            "dev": str(dev_path),
+            "eval": str(eval_path),
+        }
 
     valid_models = sorted(valid_models)
     logger.info("Modelos válidos para ensemble: %d", len(valid_models))
@@ -233,6 +253,8 @@ def main() -> None:
         json.dump(ckpts, f, indent=2)
     with (metadata_dir / "valid_models.json").open("w", encoding="utf-8") as f:
         json.dump(valid_models, f, indent=2)
+    with (metadata_dir / "score_sources.json").open("w", encoding="utf-8") as f:
+        json.dump(score_source, f, indent=2)
 
     asv_file = root / "PA_scores" / "ASVspoof2019.PA.asv.eval.gi.trl.scores.txt"
     asv_data = np.genfromtxt(asv_file, dtype=str)

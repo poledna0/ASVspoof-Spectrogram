@@ -1,0 +1,34 @@
+{
+  "EfficientNet-B0_cqcc": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_cqcc_20260528_101323/scores/EfficientNet-B0_cqcc_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/EfficientNet-B0/cqcc_EVAL_scores.txt"
+  },
+  "EfficientNet-B0_cqt": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_cqt_20260529_020841/scores/EfficientNet-B0_cqt_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/EfficientNet-B0/cqt_EVAL_scores.txt"
+  },
+  "EfficientNet-B0_lfcc": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_lfcc_20260617_143216/scores/EfficientNet-B0_lfcc_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/EfficientNet-B0/lfcc_EVAL_scores.txt"
+  },
+  "EfficientNet-B0_logmel": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_logmel_20260528_131727/scores/EfficientNet-B0_logmel_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/EfficientNet-B0/logmel_EVAL_scores.txt"
+  },
+  "EfficientNet-B0_stft": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_stft_20260528_183509/scores/EfficientNet-B0_stft_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/EfficientNet-B0/stft_EVAL_scores.txt"
+  },
+  "ResNet-18v2_cqt": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/ResNet-18v2_cqt_20260529_093135/scores/ResNet-18v2_cqt_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/ResNet-18v2/cqt_EVAL_scores.txt"
+  },
+  "ResNet-18v2_logmel": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/ResNet-18v2_logmel_20260617_163146/scores/ResNet-18v2_logmel_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/ResNet-18v2/logmel_EVAL_scores.txt"
+  },
+  "ResNet-18v2_stft": {
+    "dev": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/ResNet-18v2_stft_20260529_135246/scores/ResNet-18v2_stft_DEV_scores.txt",
+    "eval": "/home/henrique/pibic/git/ASVspoof-Spectrogram/scores/ResNet-18v2/stft_EVAL_scores.txt"
+  }
+}

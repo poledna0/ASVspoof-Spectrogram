@@ -19,7 +19,8 @@ ASV SYSTEM
    1-Pmiss,spoof  = 85.49811 % (Spoof false acceptance rate)
 
 CM SYSTEM
-   EER            = 1.338459452 % (Equal error rate for countermeasure)
+   EER            = 1.452658262 % (Equal error rate for countermeasure)
 
 TANDEM
-   min-tDCF       = 0.027965804
+   min-tDCF       = 0.027255412
+

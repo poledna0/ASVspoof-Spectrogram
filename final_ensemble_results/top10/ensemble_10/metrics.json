@@ -2,20 +2,20 @@
   "ensemble_id": "ensemble_10",
   "models": [
     "EfficientNet-B0_cqcc",
-    "EfficientNet-B0_cqt",
+    "EfficientNet-B0_logmel",
     "ResNet-18v2_cqt",
     "ResNet-18v2_logmel"
   ],
   "weights": [
-    0.21528633889267862,
-    0.12401389709876734,
-    0.5621609413126717,
-    0.09853882269588231
+    0.11003087951016612,
+    0.04687284764487415,
+    0.6912391058393861,
+    0.15185716700557367
   ],
-  "dev_eer": 0.006841563786008231,
-  "dev_eer_threshold": 0.1907913475339032,
-  "dev_min_tdcf": 0.016383785493670897,
-  "eval_eer": 0.012492258358413694,
-  "eval_eer_threshold": 0.26604482925045325,
-  "eval_min_tdcf": 0.029001080265880334
+  "dev_eer": 0.006666666666666667,
+  "dev_eer_threshold": 0.10324284354951788,
+  "dev_min_tdcf": 0.015988343042519677,
+  "eval_eer": 0.012887210040333313,
+  "eval_eer_threshold": 0.22159357500577784,
+  "eval_min_tdcf": 0.02706409400700632
 }

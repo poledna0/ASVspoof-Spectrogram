@@ -1,6 +1,6 @@
 {
   "EfficientNet-B0_cqcc": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_cqcc_20260528_101323/checkpoints/EfficientNet-B0_cqcc_best.pth",
-  "EfficientNet-B0_cqt": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_cqt_20260529_020841/checkpoints/EfficientNet-B0_cqt_best.pth",
+  "EfficientNet-B0_logmel": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/EfficientNet-B0_logmel_20260528_131727/checkpoints/EfficientNet-B0_logmel_best.pth",
   "ResNet-18v2_cqt": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/ResNet-18v2_cqt_20260529_093135/checkpoints/ResNet-18v2_cqt_best.pth",
   "ResNet-18v2_stft": "/home/henrique/pibic/git/ASVspoof-Spectrogram/checkpoints/runs-Jun-1/ResNet-18v2_stft_20260529_135246/checkpoints/ResNet-18v2_stft_best.pth"
 }

@@ -2,20 +2,20 @@
   "ensemble_id": "ensemble_01",
   "models": [
     "EfficientNet-B0_cqcc",
-    "EfficientNet-B0_cqt",
     "EfficientNet-B0_stft",
-    "ResNet-18v2_cqt"
+    "ResNet-18v2_cqt",
+    "ResNet-18v2_stft"
   ],
   "weights": [
-    0.25,
-    0.25,
-    0.25,
-    0.25
+    0.3494199645224793,
+    0.05416763770779175,
+    0.5481041149099726,
+    0.04830828285975619
   ],
-  "dev_eer": 0.005709876543209876,
-  "dev_eer_threshold": 0.2729479097667167,
-  "dev_min_tdcf": 0.015057921167500144,
-  "eval_eer": 0.009224005998812523,
-  "eval_eer_threshold": 0.33303539827462103,
-  "eval_min_tdcf": 0.022188697657294885
+  "dev_eer": 0.006862139917695473,
+  "dev_eer_threshold": 0.10387742454245212,
+  "dev_min_tdcf": 0.014746686856878686,
+  "eval_eer": 0.012878636652130297,
+  "eval_eer_threshold": 0.3152694831212832,
+  "eval_min_tdcf": 0.03293039531300562
 }

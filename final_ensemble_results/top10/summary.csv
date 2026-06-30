@@ -1,11 +1,11 @@
 ensemble_id,models,weights,dev_eer_percent,dev_min_tdcf,eval_eer_percent,eval_min_tdcf
-ensemble_04,EfficientNet-B0_cqcc + EfficientNet-B0_logmel + EfficientNet-B0_stft + ResNet-18v2_cqt,0.2728 + 0.1553 + 0.3173 + 0.2546,0.5710,0.015682,0.7839,0.020921
-ensemble_01,EfficientNet-B0_cqcc + EfficientNet-B0_cqt + EfficientNet-B0_stft + ResNet-18v2_cqt,0.2500 + 0.2500 + 0.2500 + 0.2500,0.5710,0.015058,0.9224,0.022189
-ensemble_07,EfficientNet-B0_cqcc + EfficientNet-B0_cqt + ResNet-18v2_cqt + ResNet-18v2_stft,0.2371 + 0.1165 + 0.4301 + 0.2163,0.6121,0.015971,1.1053,0.024164
-ensemble_05,EfficientNet-B0_cqcc + ResNet-18v2_cqt + ResNet-18v2_logmel + ResNet-18v2_stft,0.0934 + 0.5952 + 0.2263 + 0.0850,0.6862,0.015840,1.1995,0.025511
-ensemble_03,EfficientNet-B0_cqcc + EfficientNet-B0_stft + ResNet-18v2_cqt + ResNet-18v2_logmel,0.1974 + 0.1521 + 0.5903 + 0.0601,0.6142,0.015469,1.2106,0.025739
-ensemble_02,EfficientNet-B0_cqcc + EfficientNet-B0_stft + ResNet-18v2_cqt + ResNet-18v2_stft,0.2372 + 0.1862 + 0.5530 + 0.0235,0.6255,0.015305,1.1843,0.026385
-ensemble_06,EfficientNet-B0_cqcc + EfficientNet-B0_logmel + ResNet-18v2_cqt + ResNet-18v2_logmel,0.0931 + 0.0246 + 0.7526 + 0.1297,0.7212,0.015898,1.3385,0.027966
-ensemble_08,EfficientNet-B0_cqcc + EfficientNet-B0_lfcc + ResNet-18v2_cqt + ResNet-18v2_logmel,0.2451 + 0.0428 + 0.3471 + 0.3650,0.7212,0.016351,1.0720,0.028229
-ensemble_09,EfficientNet-B0_cqcc + EfficientNet-B0_lfcc + EfficientNet-B0_stft + ResNet-18v2_cqt,0.2427 + 0.0576 + 0.1430 + 0.5567,0.6296,0.016367,1.2204,0.028561
-ensemble_10,EfficientNet-B0_cqcc + EfficientNet-B0_cqt + ResNet-18v2_cqt + ResNet-18v2_logmel,0.2153 + 0.1240 + 0.5622 + 0.0985,0.6842,0.016384,1.2492,0.029001
+ensemble_07,EfficientNet-B0_cqcc + EfficientNet-B0_logmel + ResNet-18v2_cqt + ResNet-18v2_stft,0.3686 + 0.1041 + 0.2358 + 0.2914,0.6121,0.015775,0.9122,0.024222
+ensemble_04,EfficientNet-B0_cqcc + EfficientNet-B0_lfcc + ResNet-18v2_cqt + ResNet-18v2_stft,0.2291 + 0.0811 + 0.3157 + 0.3741,0.5772,0.015536,0.9188,0.024924
+ensemble_08,EfficientNet-B0_cqcc + ResNet-18v2_cqt + ResNet-18v2_logmel + ResNet-18v2_stft,0.2744 + 0.3718 + 0.0720 + 0.2818,0.6121,0.015807,1.0005,0.025294
+ensemble_10,EfficientNet-B0_cqcc + EfficientNet-B0_logmel + ResNet-18v2_cqt + ResNet-18v2_logmel,0.1100 + 0.0469 + 0.6912 + 0.1519,0.6667,0.015988,1.2887,0.027064
+ensemble_06,EfficientNet-B0_cqcc + EfficientNet-B0_lfcc + EfficientNet-B0_logmel + ResNet-18v2_cqt,0.0420 + 0.0414 + 0.0657 + 0.8508,0.6471,0.015741,1.4527,0.027255
+ensemble_05,EfficientNet-B0_cqcc + EfficientNet-B0_cqt + ResNet-18v2_cqt + ResNet-18v2_stft,0.4610 + 0.0209 + 0.3508 + 0.1673,0.6296,0.015667,1.2106,0.029495
+ensemble_09,EfficientNet-B0_cqcc + EfficientNet-B0_cqt + EfficientNet-B0_stft + ResNet-18v2_cqt,0.2328 + 0.1462 + 0.0409 + 0.5801,0.6667,0.015875,1.2669,0.031337
+ensemble_02,EfficientNet-B0_cqcc + EfficientNet-B0_logmel + EfficientNet-B0_stft + ResNet-18v2_cqt,0.1047 + 0.0001 + 0.0427 + 0.8526,0.6883,0.014960,1.4255,0.032293
+ensemble_01,EfficientNet-B0_cqcc + EfficientNet-B0_stft + ResNet-18v2_cqt + ResNet-18v2_stft,0.3494 + 0.0542 + 0.5481 + 0.0483,0.6862,0.014747,1.2879,0.032930
+ensemble_03,EfficientNet-B0_cqcc + EfficientNet-B0_stft + ResNet-18v2_cqt + ResNet-18v2_logmel,0.0740 + 0.0110 + 0.9118 + 0.0031,0.7366,0.015043,1.5308,0.035379
