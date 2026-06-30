@@ -1,0 +1,21 @@
+{
+  "ensemble_id": "ensemble_05",
+  "models": [
+    "EfficientNet-B0_cqcc",
+    "ResNet-18v2_cqt",
+    "ResNet-18v2_logmel",
+    "ResNet-18v2_stft"
+  ],
+  "weights": [
+    0.09344998829465116,
+    0.5951591505425219,
+    0.22634464996282636,
+    0.08504621120000053
+  ],
+  "dev_eer": 0.006862139917695473,
+  "dev_eer_threshold": 0.17553034572871867,
+  "dev_min_tdcf": 0.015839814171615372,
+  "eval_eer": 0.011994873881620703,
+  "eval_eer_threshold": 0.2953539591960354,
+  "eval_min_tdcf": 0.02551140591714101
+}

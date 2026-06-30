@@ -1,0 +1,10 @@
+[
+  "EfficientNet-B0_cqcc",
+  "EfficientNet-B0_cqt",
+  "EfficientNet-B0_lfcc",
+  "EfficientNet-B0_logmel",
+  "EfficientNet-B0_stft",
+  "ResNet-18v2_cqt",
+  "ResNet-18v2_logmel",
+  "ResNet-18v2_stft"
+]

@@ -1,0 +1,212 @@
+[
+  {
+    "ensemble_id": "ensemble_01",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_cqt",
+      "EfficientNet-B0_stft",
+      "ResNet-18v2_cqt"
+    ],
+    "weights": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "dev_eer": 0.005709876543209876,
+    "dev_eer_threshold": 0.2729479097667167,
+    "dev_min_tdcf": 0.015057921167500144,
+    "eval_eer": 0.009224005998812523,
+    "eval_eer_threshold": 0.33303539827462103,
+    "eval_min_tdcf": 0.022188697657294885
+  },
+  {
+    "ensemble_id": "ensemble_02",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_stft",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_stft"
+    ],
+    "weights": [
+      0.2372268935330713,
+      0.1862437834908357,
+      0.5530487341682285,
+      0.02348058880786439
+    ],
+    "dev_eer": 0.006255144032921811,
+    "dev_eer_threshold": 0.22130745905769417,
+    "dev_min_tdcf": 0.015304834747747059,
+    "eval_eer": 0.011843368036361403,
+    "eval_eer_threshold": 0.29495357168977115,
+    "eval_min_tdcf": 0.02638483962628127
+  },
+  {
+    "ensemble_id": "ensemble_03",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_stft",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_logmel"
+    ],
+    "weights": [
+      0.1974058050386299,
+      0.1521265805781372,
+      0.5903179685066478,
+      0.06014964587658504
+    ],
+    "dev_eer": 0.006141975308641976,
+    "dev_eer_threshold": 0.20811405546273204,
+    "dev_min_tdcf": 0.015469443801245002,
+    "eval_eer": 0.01210588006469709,
+    "eval_eer_threshold": 0.276753942522153,
+    "eval_min_tdcf": 0.02573867984835228
+  },
+  {
+    "ensemble_id": "ensemble_04",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_logmel",
+      "EfficientNet-B0_stft",
+      "ResNet-18v2_cqt"
+    ],
+    "weights": [
+      0.27279553023174546,
+      0.1553190354234247,
+      0.3172655752070386,
+      0.25461985913779134
+    ],
+    "dev_eer": 0.005709876543209876,
+    "dev_eer_threshold": 0.27925007429353166,
+    "dev_min_tdcf": 0.01568229340252385,
+    "eval_eer": 0.00783857205740843,
+    "eval_eer_threshold": 0.3249187951089478,
+    "eval_min_tdcf": 0.02092134050337534
+  },
+  {
+    "ensemble_id": "ensemble_05",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_logmel",
+      "ResNet-18v2_stft"
+    ],
+    "weights": [
+      0.09344998829465116,
+      0.5951591505425219,
+      0.22634464996282636,
+      0.08504621120000053
+    ],
+    "dev_eer": 0.006862139917695473,
+    "dev_eer_threshold": 0.17553034572871867,
+    "dev_min_tdcf": 0.015839814171615372,
+    "eval_eer": 0.011994873881620703,
+    "eval_eer_threshold": 0.2953539591960354,
+    "eval_min_tdcf": 0.02551140591714101
+  },
+  {
+    "ensemble_id": "ensemble_06",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_logmel",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_logmel"
+    ],
+    "weights": [
+      0.09306430022362584,
+      0.024616701945648304,
+      0.7526460685934875,
+      0.1296729292372385
+    ],
+    "dev_eer": 0.007211934156378601,
+    "dev_eer_threshold": 0.10927430266750465,
+    "dev_min_tdcf": 0.01589799842447389,
+    "eval_eer": 0.013384594517126303,
+    "eval_eer_threshold": 0.1919074968248466,
+    "eval_min_tdcf": 0.027965804068450284
+  },
+  {
+    "ensemble_id": "ensemble_07",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_cqt",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_stft"
+    ],
+    "weights": [
+      0.23711758347250497,
+      0.11647342595179137,
+      0.43008358054571916,
+      0.21632541002998462
+    ],
+    "dev_eer": 0.006121399176954733,
+    "dev_eer_threshold": 0.24956031217101246,
+    "dev_min_tdcf": 0.015971311053035647,
+    "eval_eer": 0.011053464672522162,
+    "eval_eer_threshold": 0.337789248662342,
+    "eval_min_tdcf": 0.02416418501925118
+  },
+  {
+    "ensemble_id": "ensemble_08",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_lfcc",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_logmel"
+    ],
+    "weights": [
+      0.2450514647382171,
+      0.04283156224380777,
+      0.34711687622691073,
+      0.3650000967910643
+    ],
+    "dev_eer": 0.007211934156378601,
+    "dev_eer_threshold": 0.2139311813761229,
+    "dev_min_tdcf": 0.01635067332159323,
+    "eval_eer": 0.010720446123293,
+    "eval_eer_threshold": 0.32827305014880603,
+    "eval_min_tdcf": 0.028229181202711784
+  },
+  {
+    "ensemble_id": "ensemble_09",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_lfcc",
+      "EfficientNet-B0_stft",
+      "ResNet-18v2_cqt"
+    ],
+    "weights": [
+      0.2427003965048976,
+      0.05762487101716981,
+      0.14302130072575478,
+      0.5566534317521779
+    ],
+    "dev_eer": 0.006296296296296296,
+    "dev_eer_threshold": 0.22995294435875657,
+    "dev_min_tdcf": 0.016366753504186864,
+    "eval_eer": 0.01220402616546895,
+    "eval_eer_threshold": 0.27999371525844097,
+    "eval_min_tdcf": 0.028561281279831777
+  },
+  {
+    "ensemble_id": "ensemble_10",
+    "models": [
+      "EfficientNet-B0_cqcc",
+      "EfficientNet-B0_cqt",
+      "ResNet-18v2_cqt",
+      "ResNet-18v2_logmel"
+    ],
+    "weights": [
+      0.21528633889267862,
+      0.12401389709876734,
+      0.5621609413126717,
+      0.09853882269588231
+    ],
+    "dev_eer": 0.006841563786008231,
+    "dev_eer_threshold": 0.1907913475339032,
+    "dev_min_tdcf": 0.016383785493670897,
+    "eval_eer": 0.012492258358413694,
+    "eval_eer_threshold": 0.26604482925045325,
+    "eval_min_tdcf": 0.029001080265880334
+  }
+]
