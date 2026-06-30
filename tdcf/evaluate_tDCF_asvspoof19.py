@@ -1,25 +1,25 @@
+import argparse
 import sys
 import numpy as np
 import eval_metrics as em
-import matplotlib.pyplot as plt
 
 # Replace CM scores with your own scores or provide score file as the first argument.
 #cm_score_file =  'scores/output.txt' #'scores/cm_dev.txt'
 # Replace ASV scores with organizers' scores or provide score file as the second argument.
 #asv_score_file = 'scores/asv_dev.txt'
 
-cm_score_file =  '/home/henrique/pasta/ASVspoof-Spectrogram/stftscore.txt'
-asv_score_file = '/home/henrique/pasta/ASVspoof-Spectrogram/PA_scores/ASVspoof2019.PA.asv.eval.gi.trl.scores.txt'
+parser = argparse.ArgumentParser(description='Official t-DCF evaluation for ASVspoof 2019')
+parser.add_argument('cm_score_file', type=str, help='CM score file in format: utt attack label score')
+parser.add_argument('asv_score_file', type=str, help='ASV score file from organizer')
+parser.add_argument('--no-plot', action='store_true', help='Disable matplotlib windows and just print metrics')
 
+args = parser.parse_args()
+cm_score_file = args.cm_score_file
+asv_score_file = args.asv_score_file
 
-args = sys.argv
-if len(args) > 1:
-    if len(args) != 3:
-        print('USAGE: python evaluate_tDCF_asvspoof19.py <CM_SCOREFILE> <ASV_SCOREFILE>')
-        exit()
-    else:
-        cm_score_file = args[1]
-        asv_score_file = args[2]
+plt = None
+if not args.no_plot:
+    import matplotlib.pyplot as plt
 
 # Fix tandem detection cost function (t-DCF) parameters
 Pspoof = 0.05
@@ -85,36 +85,35 @@ print('   min-tDCF       = {:8.9f}'.format(min_tDCF))
 
 
 # Visualize ASV scores and CM scores
-plt.figure()
-ax = plt.subplot(121)
-plt.hist(tar_asv, histtype='step', density=True, bins=50, label='Target')
-plt.hist(non_asv, histtype='step', density=True, bins=50, label='Nontarget')
-plt.hist(spoof_asv, histtype='step', density=True, bins=50, label='Spoof')
-plt.plot(asv_threshold, 0, 'o', markersize=10, mfc='none', mew=2, clip_on=False, label='EER threshold')
-plt.legend()
-plt.xlabel('ASV score')
-plt.ylabel('Density')
-plt.title('ASV score histogram')
+if not args.no_plot:
+    plt.figure()
+    ax = plt.subplot(121)
+    plt.hist(tar_asv, histtype='step', density=True, bins=50, label='Target')
+    plt.hist(non_asv, histtype='step', density=True, bins=50, label='Nontarget')
+    plt.hist(spoof_asv, histtype='step', density=True, bins=50, label='Spoof')
+    plt.plot(asv_threshold, 0, 'o', markersize=10, mfc='none', mew=2, clip_on=False, label='EER threshold')
+    plt.legend()
+    plt.xlabel('ASV score')
+    plt.ylabel('Density')
+    plt.title('ASV score histogram')
 
-ax = plt.subplot(122)
-plt.hist(bona_cm, histtype='step', density=True, bins=50, label='Bona fide')
-plt.hist(spoof_cm, histtype='step', density=True, bins=50, label='Spoof')
-plt.legend()
-plt.xlabel('CM score')
-#plt.ylabel('Density')
-plt.title('CM score histogram')
+    ax = plt.subplot(122)
+    plt.hist(bona_cm, histtype='step', density=True, bins=50, label='Bona fide')
+    plt.hist(spoof_cm, histtype='step', density=True, bins=50, label='Spoof')
+    plt.legend()
+    plt.xlabel('CM score')
+    plt.title('CM score histogram')
 
+    # Plot t-DCF as function of the CM threshold.
+    plt.figure()
+    plt.plot(CM_thresholds, tDCF_curve)
+    plt.plot(CM_thresholds[min_tDCF_index], min_tDCF, 'o', markersize=10, mfc='none', mew=2)
+    plt.xlabel('CM threshold index (operating point)')
+    plt.ylabel('Norm t-DCF')
+    plt.title('Normalized tandem t-DCF')
+    plt.plot([np.min(CM_thresholds), np.max(CM_thresholds)], [1, 1], '--', color='black')
+    plt.legend(('t-DCF', 'min t-DCF ({:.9f})'.format(min_tDCF), 'Arbitrarily bad CM (Norm t-DCF=1)'))
+    plt.xlim([np.min(CM_thresholds), np.max(CM_thresholds)])
+    plt.ylim([0, 1.5])
 
-# Plot t-DCF as function of the CM threshold.
-plt.figure()
-plt.plot(CM_thresholds, tDCF_curve)
-plt.plot(CM_thresholds[min_tDCF_index], min_tDCF, 'o', markersize=10, mfc='none', mew=2)
-plt.xlabel('CM threshold index (operating point)')
-plt.ylabel('Norm t-DCF');
-plt.title('Normalized tandem t-DCF')
-plt.plot([np.min(CM_thresholds), np.max(CM_thresholds)], [1, 1], '--', color='black')
-plt.legend(('t-DCF', 'min t-DCF ({:.9f})'.format(min_tDCF), 'Arbitrarily bad CM (Norm t-DCF=1)'))
-plt.xlim([np.min(CM_thresholds), np.max(CM_thresholds)])
-plt.ylim([0, 1.5])
-
-plt.show()
+    plt.show()
